@@ -1,31 +1,86 @@
-# GlobalWebIndex Engineering Challenge
+# go-api  - Go lang webserver assignment
 
-## Introduction
 
-This challenge is designed to give you the opportunity to demonstrate your abilities as a software engineer and specifically your knowledge of the Go language.
+This project was created to demonstrate skills in GO lang
 
-On the surface the challenge is trivial to solve, however you should choose to add features or capabilities which you feel demonstrate your skills and knowledge the best. For example, you could choose to optimise for performance and concurrency, you could choose to add a robust security layer or ensure your application is highly available. Or all of these.
 
-Of course, usually we would choose to solve any given requirement with the simplest possible solution, however that is not the spirit of this challenge.
+## Running locally
 
-## Challenge
+git clone git@github.com:tsolman/go-api.git
 
-In GWI we want our users to have a list of assets, things that favourite or “star” so that they have them in their frontpage dashboard.  An asset can be one the following
-Chart (that has a small title, axes titles and data)
-Insight (a small piece of text that provides some insight into a topic: e.g. 40% of millenials spend more than 3hours on social media daily)
-Audience (which is a series of characteristics, for that exercise lets focus on gender (Male, Female), birth country, age groups, hours spent on social media, number of purchases last month)
-e.g. Males from 24-35 that spent more than 3hours on social media daily.
+cd go-api
+go build && ./go-api
 
-Build a web server which has some endpoint to receive a user id and return a list of all the user’s assets. Also we want endpoints that would add an asset to favourite, remove it, or edit its description. Assets obviously can share some common attributes (like their description) but they also have completely different structure and data. It’s up to you to decide the structure and we are not looking for something overly complex here (especially for the cases of audiences). There is no need to have/deploy/create an actual database although we would like to discuss about storage options and data representations.
+```
+i.e. 
+open POSTMAN and GET http://localhost:8000/api/health
+```
 
-Note that users have no limit on how many assets they want on their favourites so your service will need to provide a reasonable response time.
+## Available endpoints
 
-A working server application with functional API is required, along with a clear readme.md. Useful and passing tests would be also be viewed favourably 
+GET "/api/health"  - Chech app health
 
-It is appreciated, though not required, if a Dockerfile is included.
+POST "/api/user/" - Create user
+##### Sample input
+```
+{
+	"name": "Ioannou",
+	"asset": [{
+        "description":"new insight",
+        "assetype":"insight",
+        "isfav": false,
+        "data": {
+            "text": "30% of the univerce is mine"
+        }
+    }]
+}
+```
 
-## Submission
+GET "/api/user/{id}" - Get user by id
 
-Just a make a PR to the current repo!
+PUT "/api/asset/{userid}" - Create asset per user
 
-Good luck, potential colleague! 
+##### Sample input
+```
+{
+	"description":"new insight",
+	"assetype":"insight",
+	"isfav": false,
+	"data": {
+		"text": "30% of the univerce is mine"
+	}
+}
+```
+GET "/api/assets" - Get assets
+
+PUT "/api/user/{userid}/asset/{id}" - Update asset description
+##### Sample input
+```
+{
+	"description" : "new description"
+}
+```
+
+PUT "/api/user/{userid}/asset/{id}/fav - Mark asset as favourite
+##### Sample input
+```
+{
+	"isfav" : false
+}
+```
+
+
+## Deployment
+
+The app is live at https://golang-api-test.herokuapp.com/
+
+## Built With
+
+* [GOLANG](https://golang.org/) - The GO programming language
+
+* [MUX](https://www.gorillatoolkit.org/pkg/mux) - Gorilla web toolkit
+
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
