@@ -2,42 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"html"
-	"log"
 	"net/http"
-	"os"
 	"strconv"
-	"time"
 
 	"github.com/gorilla/mux"
 )
-
-// logWebServer a wrapper to log to server
-func logWebServer(msg string) {
-	log.New(os.Stdout, "http: ", log.LstdFlags).Println(msg)
-}
-
-func auth(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		user, pass, _ := r.BasicAuth()
-		if !check(user, pass) {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		f(w, r)
-	}
-}
-
-// timedWrapperHandler a function that act as a wrapper for handlers so that we log each request execution time
-func timedWrapperHandleFunc(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
-		f(w, r)
-		end := time.Now()
-		logWebServer(fmt.Sprintf("Request: %q took: %v", html.EscapeString(r.URL.Path), end.Sub(start)))
-	}
-}
 
 // ping request a simple ping for health check
 func ping(w http.ResponseWriter, r *http.Request) {
@@ -104,8 +73,23 @@ func getAssets(w http.ResponseWriter, r *http.Request) {
 	// assets grouped by based on their type
 	aGrp := getAssetsGrouped(allAssets)
 
-	// convert assets json format
+	// convert assets to json format
 	json.NewEncoder(w).Encode(aGrp)
+}
+
+// getUsers request retrieves all users
+func getUsers(w http.ResponseWriter, r *http.Request) {
+	// retrieve all users
+	allUsers := DBgetAllUsers()
+
+	// set response to json
+	w.Header().Set("Content-Type", "application/json")
+
+	// success
+	w.WriteHeader(http.StatusOK)
+
+	// convert users to json format
+	json.NewEncoder(w).Encode(allUsers)
 }
 
 // getUserAssets request all assets of a userid
@@ -127,6 +111,19 @@ func getUserAssets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check if the request is for the same user
+	un, _, _ := r.BasicAuth()
+
+	ugt, found := DBgetUserNameByID(userID)
+	if !found {
+		// theres no such user
+		w.WriteHeader(http.StatusNotFound)
+	}
+	if ugt != un {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	// set response to json
 	w.Header().Set("Content-Type", "application/json")
 
@@ -140,41 +137,10 @@ func getUserAssets(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(aGrp)
 }
 
-// validationChecks auxiliary helper function for similar requests
-// returns an asset that is requested to perform actions on it
-// in case sth is wrong the asset is nil with the respective http status
-func validationChecks(r *http.Request) (int, *Asset) {
-	// Get params
-	params := mux.Vars(r)
-
-	// check param format
-	userID, err := strconv.Atoi(params["userid"])
-	if err != nil {
-		return http.StatusBadRequest, nil
-	}
-	// check param format
-	assetID, err := strconv.Atoi(params["assetid"])
-	if err != nil {
-		return http.StatusBadRequest, nil
-	}
-
-	// check asset existence
-	asset, found := DBgetAssetByID(assetID)
-	if !found {
-		return http.StatusNotFound, nil
-	}
-
-	// check asset ownwership
-	if getUserId(asset) != userID {
-		return http.StatusNotFound, nil
-	}
-
-	return http.StatusOK, asset
-}
-
 // removeAsset request remove asset
 func removeAsset(w http.ResponseWriter, r *http.Request) {
 	// perform all prerequisite checks
+
 	statusCode, asset := validationChecks(r)
 
 	// if asset not returned
@@ -279,31 +245,34 @@ func endPointHandler() http.Handler {
 	r := mux.NewRouter()
 
 	// ping
-	r.HandleFunc("/ping", timedWrapperHandleFunc(ping)).Methods("GET")
+	r.HandleFunc("/ping", ping).Methods("GET")
 
 	// add random assets
-	r.HandleFunc("/assets/add/{num}", timedWrapperHandleFunc(auth(addRandomAssets))).Methods("POST")
+	r.HandleFunc("/assets/add/{num}", adminauth(addRandomAssets)).Methods("POST")
 
 	// specific id
-	r.HandleFunc("/asset/{assetid}", timedWrapperHandleFunc(auth(getAsset))).Methods("GET")
+	r.HandleFunc("/asset/{assetid}", adminauth(getAsset)).Methods("GET")
 
 	// all assets
-	r.HandleFunc("/assets", timedWrapperHandleFunc(auth(getAssets))).Methods("GET")
+	r.HandleFunc("/assets", adminauth(getAssets)).Methods("GET")
+
+	// all users
+	r.HandleFunc("/users", adminauth(getUsers)).Methods("GET")
 
 	// all assets of user
-	r.HandleFunc("/user/{userid}", timedWrapperHandleFunc(auth(getUserAssets))).Methods("GET")
+	r.HandleFunc("/user/{userid}", userauth(getUserAssets)).Methods("GET")
 
-	// specific asset of user
-	r.HandleFunc("/user/{userid}/asset/{assetid}", timedWrapperHandleFunc(auth(removeAsset))).Methods("DELETE")
+	// removes specific asset of user
+	r.HandleFunc("/user/{userid}/asset/{assetid}", userauth(removeAsset)).Methods("DELETE")
 
 	// mark asset as favorite
-	r.HandleFunc("/user/{userid}/asset/{assetid}/favor", timedWrapperHandleFunc(auth(favorAsset))).Methods("PUT")
+	r.HandleFunc("/user/{userid}/asset/{assetid}/favor", userauth(favorAsset)).Methods("PUT")
 
 	// unmark asset as favorite
-	r.HandleFunc("/user/{userid}/asset/{assetid}/unfavor", timedWrapperHandleFunc(auth(unfavorAsset))).Methods("PUT")
+	r.HandleFunc("/user/{userid}/asset/{assetid}/unfavor", userauth(unfavorAsset)).Methods("PUT")
 
 	// edit asset's description
-	r.HandleFunc("/user/{userid}/asset/{assetid}/editdesc", timedWrapperHandleFunc(auth(editDescAsset))).Methods("PUT")
+	r.HandleFunc("/user/{userid}/asset/{assetid}/editdesc", userauth(editDescAsset)).Methods("PUT")
 
 	return r
 }

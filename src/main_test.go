@@ -44,14 +44,14 @@ func TestEndPointasset(t *testing.T) {
 		password       string
 		statusExpected int
 	}{
-		{"Wrong EndPoint:", "/asset", "/", "", "vasilis", "12345", http.StatusNotFound},
-		{"Wrong EndPoint without var:", "/asset/", "", "", "vasilis", "12345", http.StatusNotFound},
-		{"Wrong EndPoint with invalid assetId:", "/asset/asd", "", "", "vasilis", "12345", http.StatusBadRequest},
-		{"Non-Existing asset0:", "/asset", "", strconv.Itoa(100000), "vasilis", "12345", http.StatusNotFound},
-		{"This should not be allowed :", "/asset/1/asd", "", strconv.Itoa(0), "vasilis", "12345", http.StatusNotFound},
-		{"Existing asset1:", "/asset", "/", strconv.Itoa(realAssetIds[0]), "vasilis", "12345", http.StatusOK},
-		{"Existing asset2:", "/asset", "/", strconv.Itoa(realAssetIds[1]), "vasilis", "12345", http.StatusOK},
-		{"Existing asset3 but unauthorized:", "/asset", "/", strconv.Itoa(realAssetIds[1]), "vasilis", "123", http.StatusUnauthorized},
+		{"Wrong EndPoint:", "/asset", "/", "", "admin", "12345", http.StatusNotFound},
+		{"Wrong EndPoint without var:", "/asset/", "", "", "admin", "12345", http.StatusNotFound},
+		{"Wrong EndPoint with invalid assetId:", "/asset/asd", "", "", "admin", "12345", http.StatusBadRequest},
+		{"Non-Existing asset0:", "/asset", "", "10000", "admin", "12345", http.StatusNotFound},
+		{"This should not be allowed :", "/asset/1/asd", "", strconv.Itoa(0), "admin", "12345", http.StatusNotFound},
+		{"Existing asset1:", "/asset", "/", strconv.Itoa(realAssetIds[0]), "admin", "12345", http.StatusOK},
+		{"Existing asset2:", "/asset", "/", strconv.Itoa(realAssetIds[1]), "admin", "12345", http.StatusOK},
+		{"Existing asset3 but unauthorized:", "/asset", "/", strconv.Itoa(realAssetIds[1]), "admin", "123", http.StatusUnauthorized},
 		{"Existing asset3 but unauthorized 2:", "/asset", "/", strconv.Itoa(realAssetIds[1]), "vas", "12345", http.StatusUnauthorized},
 	}
 
@@ -90,6 +90,9 @@ func TestEndgetUserAssets(t *testing.T) {
 	// get some existing user_ids
 	realUserIds := DBgetUserSL()
 
+	gtu, _ := DBgetUserNameByID(realUserIds[0])
+	gtp, _ := DBgetUserPassByID(realUserIds[0])
+
 	tt := []struct {
 		testName       string
 		endPoint       string
@@ -99,13 +102,14 @@ func TestEndgetUserAssets(t *testing.T) {
 		password       string
 		statusExpected int
 	}{
-		{"Wrong EndPoint without real user", "/user/ss", "", strconv.Itoa(0), "vasilis", "12345", http.StatusBadRequest},
-		{"Non Existing user ", "/user", "/", strconv.Itoa(900000), "vasilis", "12345", http.StatusNotFound},
-		{"Existing user 1", "/user", "/", strconv.Itoa(realUserIds[0]), "vasilis", "12345", http.StatusOK},
-		{"Existing user 2", "/user", "/", strconv.Itoa(realUserIds[1]), "vasilis", "12345", http.StatusOK},
-		{"Existing user 3", "/user", "/", strconv.Itoa(realUserIds[2]), "vasilis", "12345", http.StatusOK},
-		{"Existing user 3 but unauthorized", "/user", "/", strconv.Itoa(realUserIds[2]), "vasilis", "123", http.StatusUnauthorized},
-		{"Existing user 3 but unauthorized 2", "/user", "/", strconv.Itoa(realUserIds[2]), "vasi", "12345", http.StatusUnauthorized},
+		{"Wrong EndPoint without real user", "/user/ss", "", strconv.Itoa(0), gtu, gtp, http.StatusBadRequest},
+		{"Non Existing user ", "/user", "/", strconv.Itoa(900000), gtu, gtp, http.StatusNotFound},
+		{"Existing user 1", "/user", "/", strconv.Itoa(realUserIds[0]), gtu, gtp, http.StatusOK},
+		{"Existing user 2", "/user", "/", strconv.Itoa(realUserIds[0]), gtu, gtp, http.StatusOK},
+		{"Existing user 3", "/user", "/", strconv.Itoa(realUserIds[0]), gtu, gtp, http.StatusOK},
+		{"User not same as auth", "/user", "/", strconv.Itoa(realUserIds[1]), gtu, gtp, http.StatusUnauthorized},
+		{"Existing user 3 but unauthorized", "/user", "/", strconv.Itoa(realUserIds[0]), "admin", "123", http.StatusUnauthorized},
+		{"Existing user 3 but unauthorized 2", "/user", "/", strconv.Itoa(realUserIds[0]), "vasi", "12345", http.StatusUnauthorized},
 	}
 
 	for _, tc := range tt {
@@ -136,7 +140,7 @@ func TestEndgetUserAssets(t *testing.T) {
 func TestEndremoveAsset(t *testing.T) {
 	srv := httptest.NewServer(endPointHandler())
 	defer srv.Close()
-	fillAssets(3)
+	fillAssets(30)
 	DBaddCreds()
 
 	// get some existing user_ids
@@ -146,11 +150,15 @@ func TestEndremoveAsset(t *testing.T) {
 	realAssetIds := DBgetAsetIdsSL()
 
 	// get user of asset
-	asset, found := DBgetAssetByID(realAssetIds[0])
-	if !found {
-		t.Fatalf("any Assets? ")
-	}
+	asset, _ := DBgetAssetByID(realAssetIds[0])
+
 	userIdOfAsset := getUserId(asset)
+
+	gtu, _ := DBgetUserNameByID(realUserIds[1])
+	gtp, _ := DBgetUserPassByID(realUserIds[1])
+
+	gtuc, _ := DBgetUserNameByID(userIdOfAsset)
+	gtpc, _ := DBgetUserPassByID(userIdOfAsset)
 
 	tt := []struct {
 		testName       string
@@ -162,13 +170,14 @@ func TestEndremoveAsset(t *testing.T) {
 		password       string
 		statusExpected int
 	}{
-		{"Non Existent User and non Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(100000), "vasilis", "12345", http.StatusNotFound},
-		{"Non Existent User and Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "12345", http.StatusNotFound},
-		{"Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", strconv.Itoa(100000), "vasilis", "12345", http.StatusNotFound},
-		{"Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "12345", http.StatusNotFound},
-		{"Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "12345", http.StatusOK},
-		{"Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "123", http.StatusUnauthorized},
+		{"Non Existent User and non Existent Asset", "/user/", "100000", "/asset/", "100000", gtu, gtp, http.StatusNotFound},
+		{"Non Existent User and Existent Asset", "/user/", "10000", "/asset/", strconv.Itoa(realAssetIds[0]), gtu, gtp, http.StatusNotFound},
+		{"Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", "10000", gtu, gtp, http.StatusNotFound},
+		{"Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "asset/", strconv.Itoa(realAssetIds[0]), gtu, gtp, http.StatusNotFound},
+		{"User not same as auth", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), gtu, gtp, http.StatusUnauthorized},
+		{"Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "admin", "123", http.StatusUnauthorized},
 		{"Existent User and Existent Asset but unauthorized 2", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "vas", "12345", http.StatusUnauthorized},
+		{"Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), gtuc, gtpc, http.StatusOK},
 	}
 
 	for _, tc := range tt {
@@ -199,7 +208,7 @@ func TestEndremoveAsset(t *testing.T) {
 func TestEndfavorOrNotAsset(t *testing.T) {
 	srv := httptest.NewServer(endPointHandler())
 	defer srv.Close()
-	fillAssets(3)
+	fillAssets(30)
 	DBaddCreds()
 
 	// get some existing user_ids
@@ -209,11 +218,15 @@ func TestEndfavorOrNotAsset(t *testing.T) {
 	realAssetIds := DBgetAsetIdsSL()
 
 	// get user of asset
-	asset, found := DBgetAssetByID(realAssetIds[0])
-	if !found {
-		t.Fatalf("any Assets? ")
-	}
+	asset, _ := DBgetAssetByID(realAssetIds[0])
+
 	userIdOfAsset := getUserId(asset)
+
+	gtu, _ := DBgetUserNameByID(realUserIds[1])
+	gtp, _ := DBgetUserPassByID(realUserIds[1])
+
+	gtuc, _ := DBgetUserNameByID(userIdOfAsset)
+	gtpc, _ := DBgetUserPassByID(userIdOfAsset)
 
 	tt := []struct {
 		testName       string
@@ -226,21 +239,23 @@ func TestEndfavorOrNotAsset(t *testing.T) {
 		password       string
 		statusExpected int
 	}{
-		{"favor Non Existent User and non Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(100000), "/favor", "vasilis", "12345", http.StatusNotFound},
-		{"favor Non Existent User and Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", "vasilis", "12345", http.StatusNotFound},
-		{"favor Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", strconv.Itoa(100000), "/favor", "vasilis", "12345", http.StatusNotFound},
-		{"favor Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", "vasilis", "12345", http.StatusNotFound},
-		{"favor Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", "vasilis", "12345", http.StatusOK},
-		{"favor Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", "vasilis", "123", http.StatusUnauthorized},
+		{"favor Non Existent User and non Existent Asset", "/user/", "10000", "/asset/", "10000", "/favor", gtu, gtp, http.StatusNotFound},
+		{"favor Non Existent User and Existent Asset", "/user/", "10000", "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", gtu, gtp, http.StatusNotFound},
+		{"favor Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", "10000", "/favor", gtu, gtp, http.StatusNotFound},
+		{"favor Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", gtu, gtp, http.StatusNotFound},
+		{"favor User not same as auth", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", gtu, gtp, http.StatusUnauthorized},
+		{"favor Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", "admin", "123", http.StatusUnauthorized},
 		{"favor Existent User and Existent Asset but unauthorized 2", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", "vas", "12345", http.StatusUnauthorized},
+		{"favor Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/favor", gtuc, gtpc, http.StatusOK},
 
-		{"unfavor  Non Existent User and non Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(100000), "/unfavor", "vasilis", "12345", http.StatusNotFound},
-		{"unfavor Non Existent User and Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", "vasilis", "12345", http.StatusNotFound},
-		{"unfavor Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", strconv.Itoa(100000), "/unfavor", "vasilis", "12345", http.StatusNotFound},
-		{"unfavor Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", "vasilis", "12345", http.StatusNotFound},
-		{"unfavor Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", "vasilis", "12345", http.StatusOK},
-		{"unfavor Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", "vasilis", "123", http.StatusUnauthorized},
+		{"unfavor  Non Existent User and non Existent Asset", "/user/", "10000", "/asset/", "10000", "/unfavor", gtu, gtp, http.StatusNotFound},
+		{"unfavor Non Existent User and Existent Asset", "/user/", "10000", "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", gtu, gtp, http.StatusNotFound},
+		{"unfavor Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", "10000", "/unfavor", gtu, gtp, http.StatusNotFound},
+		{"unfavor Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", gtu, gtp, http.StatusNotFound},
+		{"unfavor User not same as auth", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", gtu, gtp, http.StatusUnauthorized},
+		{"unfavor Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", "admin", "123", http.StatusUnauthorized},
 		{"unfavor Existent User and Existent Asset but unauthorized 2", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", "vas", "12345", http.StatusUnauthorized},
+		{"unfavor Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "/unfavor", gtuc, gtpc, http.StatusOK},
 	}
 
 	for _, tc := range tt {
@@ -273,7 +288,7 @@ func TestEndfavorOrNotAsset(t *testing.T) {
 func TestEndEditDescAsset(t *testing.T) {
 	srv := httptest.NewServer(endPointHandler())
 	defer srv.Close()
-	fillAssets(3)
+	fillAssets(30)
 	DBaddCreds()
 
 	// get some existing user_ids
@@ -283,11 +298,15 @@ func TestEndEditDescAsset(t *testing.T) {
 	realAssetIds := DBgetAsetIdsSL()
 
 	// get user of asset
-	asset, found := DBgetAssetByID(realAssetIds[0])
-	if !found {
-		t.Fatalf("any Assets? ")
-	}
+	asset, _ := DBgetAssetByID(realAssetIds[0])
+
 	userIdOfAsset := getUserId(asset)
+
+	gtu, _ := DBgetUserNameByID(realUserIds[1])
+	gtp, _ := DBgetUserPassByID(realUserIds[1])
+
+	gtuc, _ := DBgetUserNameByID(userIdOfAsset)
+	gtpc, _ := DBgetUserPassByID(userIdOfAsset)
 
 	tt := []struct {
 		testName       string
@@ -299,22 +318,20 @@ func TestEndEditDescAsset(t *testing.T) {
 		password       string
 		statusExpected int
 	}{
-		{"Non Existent User and non Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(100000), "vasilis", "12345", http.StatusNotFound},
-		{"Non Existent User and Existent Asset", "/user/", strconv.Itoa(100000), "/asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "12345", http.StatusNotFound},
-		{"Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", strconv.Itoa(100000), "vasilis", "12345", http.StatusNotFound},
-		{"Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "/asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "12345", http.StatusNotFound},
-		{"Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "12345", http.StatusOK},
-		{"Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "vasilis", "123", http.StatusUnauthorized},
+		{"Non Existent User and non Existent Asset", "/user/", "10000", "/asset/", "10000", gtu, gtp, http.StatusNotFound},
+		{"Non Existent User and Existent Asset", "/user/", "10000", "/asset/", strconv.Itoa(realAssetIds[0]), gtu, gtp, http.StatusNotFound},
+		{"Existent User and non Existent Asset", "/user/", strconv.Itoa(realUserIds[0]), "/asset/", "10000", gtu, gtp, http.StatusNotFound},
+		{"Existent User and Existent Asset but wrong user-to-asset", "/user/", strconv.Itoa(userIdOfAsset + 1), "/asset/", strconv.Itoa(realAssetIds[0]), gtu, gtp, http.StatusNotFound},
+		{"User not same as auth", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), gtu, gtp, http.StatusUnauthorized},
+		{"Existent User and Existent Asset but unauthorized", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "admin", "123", http.StatusUnauthorized},
 		{"Existent User and Existent Asset but unauthorized 2", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), "vas", "12345", http.StatusUnauthorized},
+		{"Existent User and Existent Asset", "/user/", strconv.Itoa(userIdOfAsset), "/asset/", strconv.Itoa(realAssetIds[0]), gtuc, gtpc, http.StatusOK},
 	}
 
 	for _, tc := range tt {
 		t.Run(tc.testName, func(t *testing.T) {
 
 			wholeURL := srv.URL + tc.endPoint + tc.userid + tc.endPoint2 + tc.assetid + "/editdesc"
-
-			// asset, _ = DBgetAssetByID(tc.assetid)
-			// oldDesc := getAssetDesc(asset)
 
 			type jsonExpected struct {
 				NewDesc string `json:"newdesc"`

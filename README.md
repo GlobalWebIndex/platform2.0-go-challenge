@@ -1,31 +1,45 @@
-# GlobalWebIndex Engineering Challenge
+## Starting the Web Server
 
-## Introduction
+Using docker the web server can start at port 8080 as: 
 
-This challenge is designed to give you the opportunity to demonstrate your abilities as a software engineer and specifically your knowledge of the Go language.
+```bash
+docker compose up
+```
+## Executing the Test Cases
 
-On the surface the challenge is trivial to solve, however you should choose to add features or capabilities which you feel demonstrate your skills and knowledge the best. For example, you could choose to optimise for performance and concurrency, you could choose to add a robust security layer or ensure your application is highly available. Or all of these.
+Make sure the web server is running on background and execute the tests as:
 
-Of course, usually we would choose to solve any given requirement with the simplest possible solution, however that is not the spirit of this challenge.
+```bash
+docker-compose up -d
+docker exec platform20-go-challenge_app_1 /bin/bash -c  "export CGO_ENABLED=0 && go test -v"
+```
 
-## Challenge
+## API Points
+A basic authentication is used, so the necessary username and password must also be provided in the request.
 
-In GWI we want our users to have a list of assets, things that favourite or “star” so that they have them in their frontpage dashboard.  An asset can be one the following
-Chart (that has a small title, axes titles and data)
-Insight (a small piece of text that provides some insight into a topic: e.g. 40% of millenials spend more than 3hours on social media daily)
-Audience (which is a series of characteristics, for that exercise lets focus on gender (Male, Female), birth country, age groups, hours spent on social media, number of purchases last month)
-e.g. Males from 24-35 that spent more than 3hours on social media daily.
+* username: admin
+* password: 12345
 
-Build a web server which has some endpoint to receive a user id and return a list of all the user’s assets. Also we want endpoints that would add an asset to favourite, remove it, or edit its description. Assets obviously can share some common attributes (like their description) but they also have completely different structure and data. It’s up to you to decide the structure and we are not looking for something overly complex here (especially for the cases of audiences). There is no need to have/deploy/create an actual database although we would like to discuss about storage options and data representations.
+The admin credentials are only applicable in the admin related requests, for any user related requests the username and password of the respective user should be used. `Hint: using the admin requests one can obtain everything`
 
-Note that users have no limit on how many assets they want on their favourites so your service will need to provide a reasonable response time.
+#### Import Postman Collection
 
-A working server application with functional API is required, along with a clear readme.md. Useful and passing tests would be also be viewed favourably 
+A postman collection with all the api requests available: **golang_assignment.postman_collection.json**
 
-It is appreciated, though not required, if a Dockerfile is included.
+## The following RESTful endpoints are provided:
 
-## Submission
+####  Health check endpoint, (without authentication)
+* `GET /ping`: a ping service
 
-Just a make a PR to the current repo!
+####  Admin authenticated endpoints
+* `POST /assets/add/{num}`: generate random assets. 
+* `GET /assets`: returns all assets 
+* `GET /users`: returns all assets 
+* `GET /asset/{assetid}`: returns a specific asset based on its id.
 
-Good luck, potential colleague! 
+#### User authenticated endpoints
+* `GET /user/{userid}`: all assets of user
+* `DELETE /user/{userid}/asset/{assetid}`: removal of specific asset of user
+* `PUT /user/{userid}/asset/{assetid}/favor`: mark asset as favorite
+* `PUT /user/{userid}/asset/{assetid}/unfavor`: unmark asset as favorite
+* `PUT /user/{userid}/asset/{assetid}/editdesc`: edit asset's description

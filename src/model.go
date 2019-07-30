@@ -42,6 +42,13 @@ func UnFavorAsset(a *Asset) {
 	DBupdateAssetPersist(a)
 }
 
+// User the owner of the asset
+type User struct {
+	UserID   int    `json:"userid"`
+	Username string `json:"username"`
+	Password string `json:"password"` // it should be md5
+}
+
 // CommonAttributes : keep common attributes of assets in a seperate struct
 type CommonAttributes struct {
 	ID      int       `json:"assetid"`

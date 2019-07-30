@@ -14,5 +14,6 @@ func main() {
 
 	logWebServer("Server started")
 
-	log.Fatal(http.ListenAndServe(":8080", endPointHandler()))
+	// start on 8080 while logging each req/resp with LogHTTP
+	log.Fatal(http.ListenAndServe(":8080", LogHTTP(endPointHandler())))
 }

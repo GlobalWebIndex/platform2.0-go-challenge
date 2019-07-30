@@ -3,6 +3,9 @@ package main
 // this file plays the role DB
 // if there was a DB, only this file has to change keeping concerns seperate
 
+// map of Users table
+var users = make(map[int]*User)
+
 // map of assets based on the userId, so that the assets of a given user is retrieved reasonably quick
 var assetsByUser = make(map[int]map[int]*Asset)
 
@@ -10,11 +13,62 @@ var assetsByUser = make(map[int]map[int]*Asset)
 var assetByID = make(map[int]*Asset)
 
 // a dummy var that stores all the credentials
-var allcreds = make(map[string]string)
+var adminCreds = make(map[string]string)
 
 // DBaddCreds just create some admin users here
 func DBaddCreds() {
-	allcreds["vasilis"] = "12345"
+	adminCreds["admin"] = "12345"
+}
+
+// DBaddUser a function that add a user to the `DB`
+// DB equivalent: `insert into tusers (...) values (...)`
+func DBaddUser(u *User) {
+	users[(*u).UserID] = u
+}
+
+// DBgetUserNameByID a function that get the username of a user from DB
+// DB equivalent: `select uname from tusers where id = ?`
+func DBgetUserNameByID(uid int) (string, bool) {
+
+	up, found := users[uid]
+
+	if !found {
+		return "", found
+	}
+	uv := *up
+	return uv.Username, found
+
+}
+
+// DBgetUserPassByID a function that get the password of a user from DB
+// DB equivalent: `select pass from tusers where id = ?`
+func DBgetUserPassByID(uid int) (string, bool) {
+
+	up, found := users[uid]
+
+	if !found {
+		return "", found
+	}
+	uv := *up
+	return uv.Password, found
+}
+
+// DBgetUserPassword a funtion that gets the password of a user
+// DB equivalent: 'select pass from tusers'
+func DBgetUserPassword(n string) (string, bool) {
+	for _, u := range users {
+		if u.Username == n {
+			return u.Password, true
+		}
+	}
+	return "", false
+}
+
+// DBgetAllUsers a function that returns all users, mainly for testing
+// DB equivalent: `select * from tusers`
+func DBgetAllUsers() map[int]*User {
+	// just return all the map
+	return users
 }
 
 // DBaddAsset a function that assigns the reference of asset to the internal maps
@@ -53,7 +107,7 @@ func DBremoveAsset(a *Asset) {
 	// delete the pointer from the user
 	delete(assetsByUser[userID], assetID)
 
-	//in case there are no assets left for the user also delete the map
+	//in case there are no assets left for the user also delete the map and the user
 	if len(assetsByUser[userID]) == 0 {
 		delete(assetsByUser, userID)
 	}
@@ -71,6 +125,13 @@ func DBgetUserAssets(userID int) (map[int]*Asset, bool) {
 func DBgetAllAssets() map[int]*Asset {
 	// just return all the map
 	return assetByID
+}
+
+// DBgetUserByID a funtion that returns a user given the id, and whether it was
+// DB equivalent: `select * from tusers where userId = ?`
+func DBgetUserByID(userID int) (*User, bool) {
+	value, found := users[userID]
+	return value, found
 }
 
 // DBgetAssetByID a fuction that returns an asset given its id, and whether it was found

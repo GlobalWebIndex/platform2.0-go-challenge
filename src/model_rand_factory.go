@@ -49,6 +49,15 @@ func genRandTags(n int, tagSize int) []string {
 	return randTags
 }
 
+// create a random user given his id
+func getRandUser(userID int) User {
+	return User{
+		UserID:   userID,
+		Username: randomString(10),
+		Password: randomString(10),
+	}
+}
+
 // create a random struct of Atributes
 func genRandAttributes(aType AssetType) *CommonAttributes {
 	// increment number of assets
@@ -128,5 +137,13 @@ func fillAssets(n int) {
 		asset := genRandAsset()
 		// add it
 		DBaddAsset(&asset)
+
+		// also create a user if he is new
+		_, found := DBgetUserByID(asset.getAttributes().UserID)
+		if !found {
+			user := getRandUser(asset.getAttributes().UserID)
+			DBaddUser(&user)
+		}
+
 	}
 }
