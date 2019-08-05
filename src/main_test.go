@@ -12,7 +12,10 @@ import (
 
 // a simple ping test to the webserver just to verify its listening
 func TestEndPointPing(t *testing.T) {
-	srv := httptest.NewServer(endPointHandler())
+	// create a new DB
+	db := CreateNewDB()
+
+	srv := httptest.NewServer(endPointHandler(db))
 	defer srv.Close()
 	url := fmt.Sprintf("%s/ping", srv.URL)
 	res, err := http.Get(url)
@@ -27,13 +30,18 @@ func TestEndPointPing(t *testing.T) {
 }
 
 func TestEndPointasset(t *testing.T) {
-	srv := httptest.NewServer(endPointHandler())
+	// create a new DB
+	db := CreateNewDB()
+
+	// add a single asset
+	db.fillAssets(2)
+	db.DBaddCreds()
+
+	srv := httptest.NewServer(endPointHandler(db))
 	defer srv.Close()
-	fillAssets(2)
-	DBaddCreds()
 
 	// get some existing asset ids
-	realAssetIds := DBgetAsetIdsSL()
+	realAssetIds := db.DBgetAsetIdsSL()
 
 	tt := []struct {
 		testName       string
@@ -78,20 +86,25 @@ func TestEndPointasset(t *testing.T) {
 
 		})
 	}
-	removeAllAssets()
+	db.removeAllAssets()
 }
 
 func TestEndgetUserAssets(t *testing.T) {
-	srv := httptest.NewServer(endPointHandler())
+	// create a new DB
+	db := CreateNewDB()
+
+	// add a single asset
+	db.fillAssets(3)
+	db.DBaddCreds()
+
+	srv := httptest.NewServer(endPointHandler(db))
 	defer srv.Close()
-	fillAssets(3)
-	DBaddCreds()
 
 	// get some existing user_ids
-	realUserIds := DBgetUserSL()
+	realUserIds := db.DBgetUserSL()
 
-	gtu, _ := DBgetUserNameByID(realUserIds[0])
-	gtp, _ := DBgetUserPassByID(realUserIds[0])
+	gtu, _ := db.DBgetUserNameByID(realUserIds[0])
+	gtp, _ := db.DBgetUserPassByID(realUserIds[0])
 
 	tt := []struct {
 		testName       string
@@ -134,31 +147,36 @@ func TestEndgetUserAssets(t *testing.T) {
 
 		})
 	}
-	removeAllAssets()
+	db.removeAllAssets()
 }
 
 func TestEndremoveAsset(t *testing.T) {
-	srv := httptest.NewServer(endPointHandler())
+	// create a new DB
+	db := CreateNewDB()
+
+	// add some assets
+	db.fillAssets(30)
+	db.DBaddCreds()
+
+	srv := httptest.NewServer(endPointHandler(db))
 	defer srv.Close()
-	fillAssets(30)
-	DBaddCreds()
 
 	// get some existing user_ids
-	realUserIds := DBgetUserSL()
+	realUserIds := db.DBgetUserSL()
 
 	// get some existing asset ids
-	realAssetIds := DBgetAsetIdsSL()
+	realAssetIds := db.DBgetAsetIdsSL()
 
 	// get user of asset
-	asset, _ := DBgetAssetByID(realAssetIds[0])
+	asset, _ := db.DBgetAssetByID(realAssetIds[0])
 
 	userIdOfAsset := getUserId(asset)
 
-	gtu, _ := DBgetUserNameByID(realUserIds[1])
-	gtp, _ := DBgetUserPassByID(realUserIds[1])
+	gtu, _ := db.DBgetUserNameByID(realUserIds[1])
+	gtp, _ := db.DBgetUserPassByID(realUserIds[1])
 
-	gtuc, _ := DBgetUserNameByID(userIdOfAsset)
-	gtpc, _ := DBgetUserPassByID(userIdOfAsset)
+	gtuc, _ := db.DBgetUserNameByID(userIdOfAsset)
+	gtpc, _ := db.DBgetUserPassByID(userIdOfAsset)
 
 	tt := []struct {
 		testName       string
@@ -202,31 +220,36 @@ func TestEndremoveAsset(t *testing.T) {
 
 		})
 	}
-	removeAllAssets()
+	db.removeAllAssets()
 }
 
 func TestEndfavorOrNotAsset(t *testing.T) {
-	srv := httptest.NewServer(endPointHandler())
+	// create a new DB
+	db := CreateNewDB()
+
+	// add some assets
+	db.fillAssets(30)
+	db.DBaddCreds()
+
+	srv := httptest.NewServer(endPointHandler(db))
 	defer srv.Close()
-	fillAssets(30)
-	DBaddCreds()
 
 	// get some existing user_ids
-	realUserIds := DBgetUserSL()
+	realUserIds := db.DBgetUserSL()
 
 	// get some existing asset ids
-	realAssetIds := DBgetAsetIdsSL()
+	realAssetIds := db.DBgetAsetIdsSL()
 
 	// get user of asset
-	asset, _ := DBgetAssetByID(realAssetIds[0])
+	asset, _ := db.DBgetAssetByID(realAssetIds[0])
 
 	userIdOfAsset := getUserId(asset)
 
-	gtu, _ := DBgetUserNameByID(realUserIds[1])
-	gtp, _ := DBgetUserPassByID(realUserIds[1])
+	gtu, _ := db.DBgetUserNameByID(realUserIds[1])
+	gtp, _ := db.DBgetUserPassByID(realUserIds[1])
 
-	gtuc, _ := DBgetUserNameByID(userIdOfAsset)
-	gtpc, _ := DBgetUserPassByID(userIdOfAsset)
+	gtuc, _ := db.DBgetUserNameByID(userIdOfAsset)
+	gtpc, _ := db.DBgetUserPassByID(userIdOfAsset)
 
 	tt := []struct {
 		testName       string
@@ -282,31 +305,35 @@ func TestEndfavorOrNotAsset(t *testing.T) {
 			}
 		})
 	}
-	removeAllAssets()
+	db.removeAllAssets()
 }
 
 func TestEndEditDescAsset(t *testing.T) {
-	srv := httptest.NewServer(endPointHandler())
+	// create a new DB
+	db := CreateNewDB()
+
+	// add some assets
+	db.fillAssets(30)
+	db.DBaddCreds()
+	srv := httptest.NewServer(endPointHandler(db))
 	defer srv.Close()
-	fillAssets(30)
-	DBaddCreds()
 
 	// get some existing user_ids
-	realUserIds := DBgetUserSL()
+	realUserIds := db.DBgetUserSL()
 
 	// get some existing asset ids
-	realAssetIds := DBgetAsetIdsSL()
+	realAssetIds := db.DBgetAsetIdsSL()
 
 	// get user of asset
-	asset, _ := DBgetAssetByID(realAssetIds[0])
+	asset, _ := db.DBgetAssetByID(realAssetIds[0])
 
 	userIdOfAsset := getUserId(asset)
 
-	gtu, _ := DBgetUserNameByID(realUserIds[1])
-	gtp, _ := DBgetUserPassByID(realUserIds[1])
+	gtu, _ := db.DBgetUserNameByID(realUserIds[1])
+	gtp, _ := db.DBgetUserPassByID(realUserIds[1])
 
-	gtuc, _ := DBgetUserNameByID(userIdOfAsset)
-	gtpc, _ := DBgetUserPassByID(userIdOfAsset)
+	gtuc, _ := db.DBgetUserNameByID(userIdOfAsset)
+	gtpc, _ := db.DBgetUserPassByID(userIdOfAsset)
 
 	tt := []struct {
 		testName       string
@@ -365,5 +392,5 @@ func TestEndEditDescAsset(t *testing.T) {
 
 		})
 	}
-	removeAllAssets()
+	db.removeAllAssets()
 }

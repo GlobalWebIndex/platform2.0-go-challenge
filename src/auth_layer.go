@@ -3,8 +3,8 @@ package main
 import "net/http"
 
 // an authentication for admin users
-func adminCheck(u string, p string) bool {
-	pgt, found := adminCreds[u]
+func (db *dbMock) adminCheck(u string, p string) bool {
+	pgt, found := db.adminCreds[u]
 	if !found {
 		return false
 	}
@@ -15,8 +15,8 @@ func adminCheck(u string, p string) bool {
 }
 
 // an authentication for simple users
-func userCheck(u string, p string) bool {
-	pgt, found := DBgetUserPassword(u)
+func (db *dbMock) userCheck(u string, p string) bool {
+	pgt, found := db.DBgetUserPassword(u)
 
 	if !found {
 		return false
@@ -28,10 +28,10 @@ func userCheck(u string, p string) bool {
 }
 
 // adminauth auth handler for admin users
-func adminauth(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+func (db *dbMock) adminauth(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		user, pass, _ := r.BasicAuth()
-		if !adminCheck(user, pass) {
+		if !db.adminCheck(user, pass) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
@@ -40,10 +40,10 @@ func adminauth(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWri
 }
 
 // userauth auth handler for simple users
-func userauth(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
+func (db *dbMock) userauth(f func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		user, pass, _ := r.BasicAuth()
-		if !userCheck(user, pass) {
+		if !db.userCheck(user, pass) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

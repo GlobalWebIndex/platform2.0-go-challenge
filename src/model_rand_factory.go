@@ -130,19 +130,19 @@ func genRandAsset() Asset {
 }
 
 // a function to create n assets
-func fillAssets(n int) {
+func (db *dbMock) fillAssets(n int) {
 
 	for i := 0; i < n; i++ {
 		// create the asset
 		asset := genRandAsset()
 		// add it
-		DBaddAsset(&asset)
+		db.DBaddAsset(&asset)
 
 		// also create a user if he is new
-		_, found := DBgetUserByID(asset.getAttributes().UserID)
+		_, found := db.DBgetUserByID(asset.getAttributes().UserID)
 		if !found {
 			user := getRandUser(asset.getAttributes().UserID)
-			DBaddUser(&user)
+			db.DBaddUser(&user)
 		}
 
 	}

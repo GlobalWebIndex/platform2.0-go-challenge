@@ -53,7 +53,7 @@ func LogHTTP(handler http.Handler) http.HandlerFunc {
 // validationChecks auxiliary helper function for similar requests
 // returns an asset that is requested to perform actions on it
 // in case sth is wrong the asset is nil with the respective http status
-func validationChecks(r *http.Request) (int, *Asset) {
+func (db *dbMock) validationChecks(r *http.Request) (int, *Asset) {
 	// Get params
 	params := mux.Vars(r)
 
@@ -70,7 +70,7 @@ func validationChecks(r *http.Request) (int, *Asset) {
 	}
 
 	// check asset existence
-	asset, found := DBgetAssetByID(assetID)
+	asset, found := db.DBgetAssetByID(assetID)
 	if !found {
 		return http.StatusNotFound, nil
 	}
@@ -84,7 +84,7 @@ func validationChecks(r *http.Request) (int, *Asset) {
 	// a user with correct user and password should not be able to perform actions for another user/asset
 	un, _, _ := r.BasicAuth()
 
-	ugt, found := DBgetUserNameByID(userID)
+	ugt, found := db.DBgetUserNameByID(userID)
 	if !found {
 		// theres no such user
 		return http.StatusNotFound, nil

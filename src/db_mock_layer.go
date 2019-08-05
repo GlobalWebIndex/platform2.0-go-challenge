@@ -3,34 +3,43 @@ package main
 // this file plays the role DB
 // if there was a DB, only this file has to change keeping concerns seperate
 
-// map of Users table
-var users = make(map[int]*User)
+type dbMock struct {
+	// map of Users table
+	users map[int]*User
+	// map of assets based on the userId, so that the assets of a given user is retrieved reasonably quick
+	assetsByUser map[int]map[int]*Asset
+	// map of assets based on the assetId, so
+	assetByID map[int]*Asset
+	// a dummy var that stores all the credentials
+	adminCreds map[string]string
+}
 
-// map of assets based on the userId, so that the assets of a given user is retrieved reasonably quick
-var assetsByUser = make(map[int]map[int]*Asset)
-
-// map of assets based on the assetId, so
-var assetByID = make(map[int]*Asset)
-
-// a dummy var that stores all the credentials
-var adminCreds = make(map[string]string)
+// CreateNewDB create and init what would be a "db" connection
+func CreateNewDB() *dbMock {
+	return &dbMock{
+		users:        make(map[int]*User),
+		assetsByUser: make(map[int]map[int]*Asset),
+		assetByID:    make(map[int]*Asset),
+		adminCreds:   make(map[string]string),
+	}
+}
 
 // DBaddCreds just create some admin users here
-func DBaddCreds() {
-	adminCreds["admin"] = "12345"
+func (db *dbMock) DBaddCreds() {
+	db.adminCreds["admin"] = "12345"
 }
 
 // DBaddUser a function that add a user to the `DB`
 // DB equivalent: `insert into tusers (...) values (...)`
-func DBaddUser(u *User) {
-	users[(*u).UserID] = u
+func (db *dbMock) DBaddUser(u *User) {
+	db.users[(*u).UserID] = u
 }
 
 // DBgetUserNameByID a function that get the username of a user from DB
 // DB equivalent: `select uname from tusers where id = ?`
-func DBgetUserNameByID(uid int) (string, bool) {
+func (db *dbMock) DBgetUserNameByID(uid int) (string, bool) {
 
-	up, found := users[uid]
+	up, found := db.users[uid]
 
 	if !found {
 		return "", found
@@ -42,9 +51,9 @@ func DBgetUserNameByID(uid int) (string, bool) {
 
 // DBgetUserPassByID a function that get the password of a user from DB
 // DB equivalent: `select pass from tusers where id = ?`
-func DBgetUserPassByID(uid int) (string, bool) {
+func (db *dbMock) DBgetUserPassByID(uid int) (string, bool) {
 
-	up, found := users[uid]
+	up, found := db.users[uid]
 
 	if !found {
 		return "", found
@@ -55,8 +64,8 @@ func DBgetUserPassByID(uid int) (string, bool) {
 
 // DBgetUserPassword a funtion that gets the password of a user
 // DB equivalent: 'select pass from tusers'
-func DBgetUserPassword(n string) (string, bool) {
-	for _, u := range users {
+func (db *dbMock) DBgetUserPassword(n string) (string, bool) {
+	for _, u := range db.users {
 		if u.Username == n {
 			return u.Password, true
 		}
@@ -66,14 +75,14 @@ func DBgetUserPassword(n string) (string, bool) {
 
 // DBgetAllUsers a function that returns all users, mainly for testing
 // DB equivalent: `select * from tusers`
-func DBgetAllUsers() map[int]*User {
+func (db *dbMock) DBgetAllUsers() map[int]*User {
 	// just return all the map
-	return users
+	return db.users
 }
 
 // DBaddAsset a function that assigns the reference of asset to the internal maps
 // DB equivalent : `insert into tasset(...) values (...)`
-func DBaddAsset(a *Asset) {
+func (db *dbMock) DBaddAsset(a *Asset) {
 
 	// get user index
 	userID := getUserId(a)
@@ -81,18 +90,18 @@ func DBaddAsset(a *Asset) {
 	assetID := getAssetId(a)
 
 	// init map in case first asset for that user
-	if assetsByUser[userID] == nil {
-		assetsByUser[userID] = make(map[int]*Asset)
+	if db.assetsByUser[userID] == nil {
+		db.assetsByUser[userID] = make(map[int]*Asset)
 	}
 
 	// assign the pointer
-	assetsByUser[userID][assetID] = a
-	assetByID[assetID] = a
+	db.assetsByUser[userID][assetID] = a
+	db.assetByID[assetID] = a
 }
 
 // DBremoveAsset a function that removes the asset from the internal maps
 // DB equivalent : `delete from tasset where assetID = ?`
-func DBremoveAsset(a *Asset) {
+func (db *dbMock) DBremoveAsset(a *Asset) {
 	// get the userId, before removing anything
 	// get user index
 	userID := getUserId(a)
@@ -100,58 +109,58 @@ func DBremoveAsset(a *Asset) {
 	assetID := getAssetId(a)
 
 	// remove from map [assetId]
-	delete(assetByID, assetID)
+	delete(db.assetByID, assetID)
 
 	// remove from map [userId][assetId]
 
 	// delete the pointer from the user
-	delete(assetsByUser[userID], assetID)
+	delete(db.assetsByUser[userID], assetID)
 
 	//in case there are no assets left for the user also delete the map and the user
-	if len(assetsByUser[userID]) == 0 {
-		delete(assetsByUser, userID)
+	if len(db.assetsByUser[userID]) == 0 {
+		delete(db.assetsByUser, userID)
 	}
 }
 
 // DBgetUserAssets a function that returns all the assets of a user
 // DB equivalent: `select * from tassets where user_id = ?`
-func DBgetUserAssets(userID int) (map[int]*Asset, bool) {
-	mapValue, found := assetsByUser[userID]
+func (db *dbMock) DBgetUserAssets(userID int) (map[int]*Asset, bool) {
+	mapValue, found := db.assetsByUser[userID]
 	return mapValue, found
 }
 
 // DBgetAllAssets a function that returns all assets, mainly for testing
 // DB equivalent: `select * from tassets`
-func DBgetAllAssets() map[int]*Asset {
+func (db *dbMock) DBgetAllAssets() map[int]*Asset {
 	// just return all the map
-	return assetByID
+	return db.assetByID
 }
 
 // DBgetUserByID a funtion that returns a user given the id, and whether it was
 // DB equivalent: `select * from tusers where userId = ?`
-func DBgetUserByID(userID int) (*User, bool) {
-	value, found := users[userID]
+func (db *dbMock) DBgetUserByID(userID int) (*User, bool) {
+	value, found := db.users[userID]
 	return value, found
 }
 
 // DBgetAssetByID a fuction that returns an asset given its id, and whether it was found
 // DB equivalent: `select * from tassets where assetId = ?`
-func DBgetAssetByID(assetID int) (*Asset, bool) {
-	value, found := assetByID[assetID]
+func (db *dbMock) DBgetAssetByID(assetID int) (*Asset, bool) {
+	value, found := db.assetByID[assetID]
 	return value, found
 }
 
 // DBupdateAssetPersist a dummy function, since everything is on memory, changes are persisted on the fly
 // DB equivalent: `update tasset ....`
-func DBupdateAssetPersist(a *Asset) {
+func (db *dbMock) DBupdateAssetPersist(a *Asset) {
 	// nothing atm
 }
 
 // DBgetUserSL a function that retrieves the user ids into a slice of int
 // DB equivalent: `select userid from ...`
-func DBgetUserSL() []int {
+func (db *dbMock) DBgetUserSL() []int {
 	uids := []int{}
-	for k := range assetsByUser {
+	for k := range db.assetsByUser {
 		uids = append(uids, k)
 	}
 	return uids
@@ -159,9 +168,9 @@ func DBgetUserSL() []int {
 
 // DBgetAsetIdsSL a funtion that retrieves the asset ids into a slice of int
 // DB equivalent: `select assetid from ...`
-func DBgetAsetIdsSL() []int {
+func (db *dbMock) DBgetAsetIdsSL() []int {
 	aids := []int{}
-	for k := range assetByID {
+	for k := range db.assetByID {
 		aids = append(aids, k)
 	}
 	return aids
@@ -169,19 +178,19 @@ func DBgetAsetIdsSL() []int {
 
 // DBgetAssetsCount a funtion that count the number of assets
 // DB equivalent `select count(*) from ...`
-func DBgetAssetsCount() int {
-	return len(assetByID)
+func (db *dbMock) DBgetAssetsCount() int {
+	return len(db.assetByID)
 }
 
 // removeAllAssets a funtion that removes every asset
 // DB equivalent `delete tasset ...`
-func removeAllAssets() {
+func (db *dbMock) removeAllAssets() {
 
-	assetIds := DBgetAsetIdsSL()
+	assetIds := db.DBgetAsetIdsSL()
 	for _, aID := range assetIds {
-		a, found := assetByID[aID]
+		a, found := db.assetByID[aID]
 		if found {
-			DBremoveAsset(a)
+			db.DBremoveAsset(a)
 		}
 	}
 }

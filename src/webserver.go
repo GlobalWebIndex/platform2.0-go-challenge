@@ -15,7 +15,7 @@ func ping(w http.ResponseWriter, r *http.Request) {
 }
 
 // addRandomAssets request add random assets, can be helpful
-func addRandomAssets(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) addRandomAssets(w http.ResponseWriter, r *http.Request) {
 	// Get params
 	params := mux.Vars(r)
 
@@ -25,12 +25,12 @@ func addRandomAssets(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fillAssets(num)
+	db.fillAssets(num)
 	w.WriteHeader(http.StatusOK)
 }
 
 // getAsset request asset with provided {assetid}
-func getAsset(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) getAsset(w http.ResponseWriter, r *http.Request) {
 	// Get params
 	params := mux.Vars(r)
 
@@ -42,7 +42,7 @@ func getAsset(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check asset existence
-	asset, found := DBgetAssetByID(assetID)
+	asset, found := db.DBgetAssetByID(assetID)
 	if !found {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -60,9 +60,9 @@ func getAsset(w http.ResponseWriter, r *http.Request) {
 }
 
 // getAssets request retrieves all assets
-func getAssets(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) getAssets(w http.ResponseWriter, r *http.Request) {
 	// retrieve all assets
-	allAssets := DBgetAllAssets()
+	allAssets := db.DBgetAllAssets()
 
 	// set response to json
 	w.Header().Set("Content-Type", "application/json")
@@ -78,9 +78,9 @@ func getAssets(w http.ResponseWriter, r *http.Request) {
 }
 
 // getUsers request retrieves all users
-func getUsers(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) getUsers(w http.ResponseWriter, r *http.Request) {
 	// retrieve all users
-	allUsers := DBgetAllUsers()
+	allUsers := db.DBgetAllUsers()
 
 	// set response to json
 	w.Header().Set("Content-Type", "application/json")
@@ -93,7 +93,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // getUserAssets request all assets of a userid
-func getUserAssets(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) getUserAssets(w http.ResponseWriter, r *http.Request) {
 	// Get params
 	params := mux.Vars(r)
 
@@ -105,7 +105,7 @@ func getUserAssets(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check user existence
-	userAssets, found := DBgetUserAssets(userID)
+	userAssets, found := db.DBgetUserAssets(userID)
 	if !found {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -114,7 +114,7 @@ func getUserAssets(w http.ResponseWriter, r *http.Request) {
 	// check if the request is for the same user
 	un, _, _ := r.BasicAuth()
 
-	ugt, found := DBgetUserNameByID(userID)
+	ugt, found := db.DBgetUserNameByID(userID)
 	if !found {
 		// theres no such user
 		w.WriteHeader(http.StatusNotFound)
@@ -138,10 +138,10 @@ func getUserAssets(w http.ResponseWriter, r *http.Request) {
 }
 
 // removeAsset request remove asset
-func removeAsset(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) removeAsset(w http.ResponseWriter, r *http.Request) {
 	// perform all prerequisite checks
 
-	statusCode, asset := validationChecks(r)
+	statusCode, asset := db.validationChecks(r)
 
 	// if asset not returned
 	if asset == nil {
@@ -153,13 +153,13 @@ func removeAsset(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	// removal
-	DBremoveAsset(asset)
+	db.DBremoveAsset(asset)
 }
 
 // favorAsset request to mark asset as favorite
-func favorAsset(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) favorAsset(w http.ResponseWriter, r *http.Request) {
 	// perform all prerequisite checks
-	statusCode, asset := validationChecks(r)
+	statusCode, asset := db.validationChecks(r)
 
 	// if asset not returned
 	if asset == nil {
@@ -173,17 +173,17 @@ func favorAsset(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	// mark it as favorite
-	FavorAsset(asset)
+	db.FavorAsset(asset)
 
 	// respond it to uset
 	json.NewEncoder(w).Encode(asset)
 }
 
 // unfavorAsset request unmark asset from favorite
-func unfavorAsset(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) unfavorAsset(w http.ResponseWriter, r *http.Request) {
 
 	// perform all prerequisite checks
-	statusCode, asset := validationChecks(r)
+	statusCode, asset := db.validationChecks(r)
 
 	// if asset not returned
 	if asset == nil {
@@ -198,16 +198,16 @@ func unfavorAsset(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	// mark it as favorite
-	UnFavorAsset(asset)
+	db.UnFavorAsset(asset)
 
 	// respond it to uset
 	json.NewEncoder(w).Encode(asset)
 }
 
-func editDescAsset(w http.ResponseWriter, r *http.Request) {
+func (db *dbMock) editDescAsset(w http.ResponseWriter, r *http.Request) {
 
 	// perform all prerequisite checks
-	statusCode, assetToEdit := validationChecks(r)
+	statusCode, assetToEdit := db.validationChecks(r)
 
 	// if asset not returned
 	if assetToEdit == nil {
@@ -234,45 +234,45 @@ func editDescAsset(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	// do the actual edit
-	EditDesc(assetToEdit, jsonReceived.NewDesc)
+	db.EditDesc(assetToEdit, jsonReceived.NewDesc)
 
 	// respond it to uset
 	json.NewEncoder(w).Encode(assetToEdit)
 }
 
 // endPointHandler having handler in seperate function helps especially in testing
-func endPointHandler() http.Handler {
+func endPointHandler(db *dbMock) http.Handler {
 	r := mux.NewRouter()
 
 	// ping
 	r.HandleFunc("/ping", ping).Methods("GET")
 
 	// add random assets
-	r.HandleFunc("/assets/add/{num}", adminauth(addRandomAssets)).Methods("POST")
+	r.HandleFunc("/assets/add/{num}", db.adminauth(db.addRandomAssets)).Methods("POST")
 
 	// specific id
-	r.HandleFunc("/asset/{assetid}", adminauth(getAsset)).Methods("GET")
+	r.HandleFunc("/asset/{assetid}", db.adminauth(db.getAsset)).Methods("GET")
 
 	// all assets
-	r.HandleFunc("/assets", adminauth(getAssets)).Methods("GET")
+	r.HandleFunc("/assets", db.adminauth(db.getAssets)).Methods("GET")
 
 	// all users
-	r.HandleFunc("/users", adminauth(getUsers)).Methods("GET")
+	r.HandleFunc("/users", db.adminauth(db.getUsers)).Methods("GET")
 
 	// all assets of user
-	r.HandleFunc("/user/{userid}", userauth(getUserAssets)).Methods("GET")
+	r.HandleFunc("/user/{userid}", db.userauth(db.getUserAssets)).Methods("GET")
 
 	// removes specific asset of user
-	r.HandleFunc("/user/{userid}/asset/{assetid}", userauth(removeAsset)).Methods("DELETE")
+	r.HandleFunc("/user/{userid}/asset/{assetid}", db.userauth(db.removeAsset)).Methods("DELETE")
 
 	// mark asset as favorite
-	r.HandleFunc("/user/{userid}/asset/{assetid}/favor", userauth(favorAsset)).Methods("PUT")
+	r.HandleFunc("/user/{userid}/asset/{assetid}/favor", db.userauth(db.favorAsset)).Methods("PUT")
 
 	// unmark asset as favorite
-	r.HandleFunc("/user/{userid}/asset/{assetid}/unfavor", userauth(unfavorAsset)).Methods("PUT")
+	r.HandleFunc("/user/{userid}/asset/{assetid}/unfavor", db.userauth(db.unfavorAsset)).Methods("PUT")
 
 	// edit asset's description
-	r.HandleFunc("/user/{userid}/asset/{assetid}/editdesc", userauth(editDescAsset)).Methods("PUT")
+	r.HandleFunc("/user/{userid}/asset/{assetid}/editdesc", db.userauth(db.editDescAsset)).Methods("PUT")
 
 	return r
 }

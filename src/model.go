@@ -24,22 +24,22 @@ func getUserId(a *Asset) int {
 	return (*a).getAttributes().UserID
 }
 
-func EditDesc(a *Asset, newDesc string) {
+func (db *dbMock) EditDesc(a *Asset, newDesc string) {
 	(*a).getAttributes().Desc = newDesc
 	(*a).getAttributes().LastUpd = time.Now()
-	DBupdateAssetPersist(a)
+	db.DBupdateAssetPersist(a)
 }
 
-func FavorAsset(a *Asset) {
+func (db *dbMock) FavorAsset(a *Asset) {
 	(*a).getAttributes().IsFav = true
 	(*a).getAttributes().LastUpd = time.Now()
-	DBupdateAssetPersist(a)
+	db.DBupdateAssetPersist(a)
 }
 
-func UnFavorAsset(a *Asset) {
+func (db *dbMock) UnFavorAsset(a *Asset) {
 	(*a).getAttributes().IsFav = false
 	(*a).getAttributes().LastUpd = time.Now()
-	DBupdateAssetPersist(a)
+	db.DBupdateAssetPersist(a)
 }
 
 // User the owner of the asset
