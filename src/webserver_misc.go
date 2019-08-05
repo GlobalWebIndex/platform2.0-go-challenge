@@ -53,7 +53,7 @@ func LogHTTP(handler http.Handler) http.HandlerFunc {
 // validationChecks auxiliary helper function for similar requests
 // returns an asset that is requested to perform actions on it
 // in case sth is wrong the asset is nil with the respective http status
-func (db *dbMock) validationChecks(r *http.Request) (int, *Asset) {
+func (db *dbMock) validationChecks(r *http.Request) (int, Asset) {
 	// Get params
 	params := mux.Vars(r)
 

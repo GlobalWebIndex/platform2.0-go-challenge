@@ -136,7 +136,7 @@ func (db *dbMock) fillAssets(n int) {
 		// create the asset
 		asset := genRandAsset()
 		// add it
-		db.DBaddAsset(&asset)
+		db.DBaddAsset(asset)
 
 		// also create a user if he is new
 		_, found := db.DBgetUserByID(asset.getAttributes().UserID)

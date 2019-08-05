@@ -8,37 +8,37 @@ type Asset interface {
 	getAttributes() *CommonAttributes
 }
 
-func getAssetUserId(a *Asset) int {
-	return (*a).getAttributes().UserID
+func getAssetUserId(a Asset) int {
+	return a.getAttributes().UserID
 }
 
-func getAssetId(a *Asset) int {
-	return (*a).getAttributes().ID
+func getAssetId(a Asset) int {
+	return a.getAttributes().ID
 }
 
-func getAssetDesc(a *Asset) string {
-	return (*a).getAttributes().Desc
+func getAssetDesc(a Asset) string {
+	return a.getAttributes().Desc
 }
 
-func getUserId(a *Asset) int {
-	return (*a).getAttributes().UserID
+func getUserId(a Asset) int {
+	return a.getAttributes().UserID
 }
 
-func (db *dbMock) EditDesc(a *Asset, newDesc string) {
-	(*a).getAttributes().Desc = newDesc
-	(*a).getAttributes().LastUpd = time.Now()
+func (db *dbMock) EditDesc(a Asset, newDesc string) {
+	a.getAttributes().Desc = newDesc
+	a.getAttributes().LastUpd = time.Now()
 	db.DBupdateAssetPersist(a)
 }
 
-func (db *dbMock) FavorAsset(a *Asset) {
-	(*a).getAttributes().IsFav = true
-	(*a).getAttributes().LastUpd = time.Now()
+func (db *dbMock) FavorAsset(a Asset) {
+	a.getAttributes().IsFav = true
+	a.getAttributes().LastUpd = time.Now()
 	db.DBupdateAssetPersist(a)
 }
 
-func (db *dbMock) UnFavorAsset(a *Asset) {
-	(*a).getAttributes().IsFav = false
-	(*a).getAttributes().LastUpd = time.Now()
+func (db *dbMock) UnFavorAsset(a Asset) {
+	a.getAttributes().IsFav = false
+	a.getAttributes().LastUpd = time.Now()
 	db.DBupdateAssetPersist(a)
 }
 
@@ -130,18 +130,18 @@ func (a Audience) getAttributes() *CommonAttributes {
 }
 
 type AssetGroupped struct {
-	CH []*Asset `json:"chartsl"`
-	IN []*Asset `json:"insighsl"`
-	AU []*Asset `json:"audiencesl"`
+	CH []Asset `json:"chartsl"`
+	IN []Asset `json:"insighsl"`
+	AU []Asset `json:"audiencesl"`
 }
 
 // a useful function that allows to group assets
 // by their assettype
-func getAssetsGrouped(allAssets map[int]*Asset) AssetGroupped {
+func getAssetsGrouped(allAssets map[int]Asset) AssetGroupped {
 
 	aGrp := AssetGroupped{}
 	for _, a := range allAssets {
-		switch (*a).getAttributes().Type {
+		switch a.getAttributes().Type {
 		case CHART:
 			aGrp.CH = append(aGrp.CH, a)
 		case INSIGHT:

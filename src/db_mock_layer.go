@@ -7,9 +7,9 @@ type dbMock struct {
 	// map of Users table
 	users map[int]*User
 	// map of assets based on the userId, so that the assets of a given user is retrieved reasonably quick
-	assetsByUser map[int]map[int]*Asset
+	assetsByUser map[int]map[int]Asset
 	// map of assets based on the assetId, so
-	assetByID map[int]*Asset
+	assetByID map[int]Asset
 	// a dummy var that stores all the credentials
 	adminCreds map[string]string
 }
@@ -18,8 +18,8 @@ type dbMock struct {
 func CreateNewDB() *dbMock {
 	return &dbMock{
 		users:        make(map[int]*User),
-		assetsByUser: make(map[int]map[int]*Asset),
-		assetByID:    make(map[int]*Asset),
+		assetsByUser: make(map[int]map[int]Asset),
+		assetByID:    make(map[int]Asset),
 		adminCreds:   make(map[string]string),
 	}
 }
@@ -82,7 +82,7 @@ func (db *dbMock) DBgetAllUsers() map[int]*User {
 
 // DBaddAsset a function that assigns the reference of asset to the internal maps
 // DB equivalent : `insert into tasset(...) values (...)`
-func (db *dbMock) DBaddAsset(a *Asset) {
+func (db *dbMock) DBaddAsset(a Asset) {
 
 	// get user index
 	userID := getUserId(a)
@@ -91,7 +91,7 @@ func (db *dbMock) DBaddAsset(a *Asset) {
 
 	// init map in case first asset for that user
 	if db.assetsByUser[userID] == nil {
-		db.assetsByUser[userID] = make(map[int]*Asset)
+		db.assetsByUser[userID] = make(map[int]Asset)
 	}
 
 	// assign the pointer
@@ -101,7 +101,7 @@ func (db *dbMock) DBaddAsset(a *Asset) {
 
 // DBremoveAsset a function that removes the asset from the internal maps
 // DB equivalent : `delete from tasset where assetID = ?`
-func (db *dbMock) DBremoveAsset(a *Asset) {
+func (db *dbMock) DBremoveAsset(a Asset) {
 	// get the userId, before removing anything
 	// get user index
 	userID := getUserId(a)
@@ -124,14 +124,14 @@ func (db *dbMock) DBremoveAsset(a *Asset) {
 
 // DBgetUserAssets a function that returns all the assets of a user
 // DB equivalent: `select * from tassets where user_id = ?`
-func (db *dbMock) DBgetUserAssets(userID int) (map[int]*Asset, bool) {
+func (db *dbMock) DBgetUserAssets(userID int) (map[int]Asset, bool) {
 	mapValue, found := db.assetsByUser[userID]
 	return mapValue, found
 }
 
 // DBgetAllAssets a function that returns all assets, mainly for testing
 // DB equivalent: `select * from tassets`
-func (db *dbMock) DBgetAllAssets() map[int]*Asset {
+func (db *dbMock) DBgetAllAssets() map[int]Asset {
 	// just return all the map
 	return db.assetByID
 }
@@ -145,14 +145,14 @@ func (db *dbMock) DBgetUserByID(userID int) (*User, bool) {
 
 // DBgetAssetByID a fuction that returns an asset given its id, and whether it was found
 // DB equivalent: `select * from tassets where assetId = ?`
-func (db *dbMock) DBgetAssetByID(assetID int) (*Asset, bool) {
+func (db *dbMock) DBgetAssetByID(assetID int) (Asset, bool) {
 	value, found := db.assetByID[assetID]
 	return value, found
 }
 
 // DBupdateAssetPersist a dummy function, since everything is on memory, changes are persisted on the fly
 // DB equivalent: `update tasset ....`
-func (db *dbMock) DBupdateAssetPersist(a *Asset) {
+func (db *dbMock) DBupdateAssetPersist(a Asset) {
 	// nothing atm
 }
 
