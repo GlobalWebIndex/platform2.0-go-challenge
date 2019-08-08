@@ -88,9 +88,11 @@ DELETE host_ip:1323/api/users
 ```
 
 #### Request
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `int` | **id of the user to be deleted** |
+```javascript
+{
+    "id": 1
+}
+```
 
 #### Response deleted user
 
