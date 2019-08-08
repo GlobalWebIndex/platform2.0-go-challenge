@@ -135,7 +135,9 @@ POST host_ip:1323/api/users/favourites
             .
             .
         }
-    }
+    },
+    "next_token": xxx,
+    "page_size": 100
 }
 ```
 - - - -
