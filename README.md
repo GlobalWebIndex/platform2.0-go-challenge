@@ -7,7 +7,7 @@ This repo contains the source for Skyritsis GWI  Engineering Challenge.<br>
 Build a web server which has some endpoint to receive a user id and return a list of all the user’s assets. Also we want endpoints that would add an asset to favourite, remove it, or edit its description. Assets obviously can share some common attributes (like their description) but they also have completely different structure and data. It’s up to you to decide the structure and we are not looking for something overly complex here (especially for the cases of audiences). There is no need to have/deploy/create an actual database although we would like to discuss about storage options and data representations.
 
 ## Architecture
-The solution provided is lossely based on Uncle Bob’s Architecture (Golang Clean Architecture).
+The solution provided is loosely based on Uncle Bob’s Architecture (Golang Clean Architecture).
 
 ## Installation
 
