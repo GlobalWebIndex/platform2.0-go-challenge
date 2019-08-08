@@ -1,31 +1,292 @@
 # GlobalWebIndex Engineering Challenge
 
 ## Introduction
+This repo contains the source for Skyritsis GWI  Engineering Challenge.<br>
 
-This challenge is designed to give you the opportunity to demonstrate your abilities as a software engineer and specifically your knowledge of the Go language.
+## Scope
+Build a web server which has some endpoint to receive a user id and return a list of all the user’s assets. Also we want endpoints that would add an asset to favourite, remove it, or edit its description. Assets obviously can share some common attributes (like their description) but they also have completely different structure and data. It’s up to you to decide the structure and we are not looking for something overly complex here (especially for the cases of audiences). There is no need to have/deploy/create an actual database although we would like to discuss about storage options and data representations.
 
-On the surface the challenge is trivial to solve, however you should choose to add features or capabilities which you feel demonstrate your skills and knowledge the best. For example, you could choose to optimise for performance and concurrency, you could choose to add a robust security layer or ensure your application is highly available. Or all of these.
+## Architecture
+The solution provided is lossely based on Uncle Bob’s Architecture (Golang Clean Architecture).
 
-Of course, usually we would choose to solve any given requirement with the simplest possible solution, however that is not the spirit of this challenge.
+## Installation
 
-## Challenge
+In order to intall and run this app, you need to first get the source code from github.<br>After that, there are two ways to run in. Using docker or golang directly.
+### Docker Method
+```
+$ cd /path/to/gwiChallenge
+$ docker build --tag=gwi .
+$ docker run -p 1323:1323 --name gwi gwi
+#optional api tests
+$ docker run --net=host -it gwi /app/test
+```
 
-In GWI we want our users to have a list of assets, things that favourite or “star” so that they have them in their frontpage dashboard.  An asset can be one the following
-* Chart (that has a small title, axes titles and data)
-* Insight (a small piece of text that provides some insight into a topic, e.g. "40% of millenials spend more than 3hours on social media daily")
-* Audience (which is a series of characteristics, for that exercise lets focus on gender (Male, Female), birth country, age groups, hours spent daily on social media, number of purchases last month)
-e.g. Males from 24-35 that spent more than 3 hours on social media daily.
+### Golang Method
+Requires Go 1.12 and go modules
+```
+$ cd /path/to/gwiChallenge
+$ go build && ./gwi 
+#optional api tests
+$ cd /path/to/gwiChallenge/apiTests
+$ go build && ./apiTests 
+```
 
-Build a web server which has some endpoint to receive a user id and return a list of all the user’s assets. Also we want endpoints that would add an asset to favourites, remove it, or edit its description. Assets obviously can share some common attributes (like their description) but they also have completely different structure and data. It’s up to you to decide the structure and we are not looking for something overly complex here (especially for the cases of audiences). There is no need to have/deploy/create an actual database although we would like to discuss about storage options and data representations.
+## API Description
 
-Note that users have no limit on how many assets they want on their favourites so your service will need to provide a reasonable response time.
+All API calls have JSON request and response bodies
+<br>
+- - - -
+### Get All System Users
 
-A working server application with functional API is required, along with a clear readme.md. Useful and passing tests would be also be viewed favourably 
+```http
+GET host_ip:1323/api/users
+```
+#### Response
 
-It is appreciated, though not required, if a Dockerfile is included.
+```javascript
+[
+    {
+        "id": 1
+    },
+    .
+    .
+    .
+]
+```
+- - - -
+### Create System User
 
-## Submission
+```http
+GET host_ip:1323/api/users/create
+```
 
-Just a make a PR to the current repo!
+#### Response created user
 
-Good luck, potential colleague! 
+```javascript
+{
+    "id": 1
+}
+```
+- - - -
+### Get a System User
+
+```http
+GET host_ip:1323/api/users/get/:id
+```
+#### Response retrieved user
+
+```javascript
+{
+    "id": 1
+}
+```
+- - - -
+### Delete a System User
+
+```http
+DELETE host_ip:1323/api/users
+```
+
+#### Request
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `int` | **id of the user to be deleted** |
+
+#### Response deleted user
+
+```javascript
+{
+    "id": 1
+}
+```
+- - - -
+### Get User Favourites
+
+```http
+POST host_ip:1323/api/users/favourites
+```
+
+#### Request
+```javascript
+{
+    "user":{
+        "id":1
+    },
+    "next_token": 0,
+    "page_size": 100
+}
+```
+
+#### Response UserFavourites Paginated
+
+```javascript
+{
+    "user": {
+        "id": 1,
+        "assets": {
+            "550": {
+                "id": 550,
+                "description": "XVlBzgbaiC",
+                "insight": {
+                    "insight": "MRAjW"
+                }
+            },
+            .
+            .
+            .
+        }
+    }
+}
+```
+- - - -
+### Add User Favourite
+
+```http
+PUT host_ip:1323/api/users/favourites
+```
+
+#### Request
+```javascript
+{
+    "user":{
+        "id":1
+    },
+    "asset":{
+        "id":1
+    }
+}
+```
+
+#### Response Added Favorite ID
+
+```javascript
+{
+    "id": 1
+}
+```
+- - - -
+### Remove User Favourite
+
+```http
+DELETE host_ip:1323/api/users/favourites
+```
+
+#### Request
+```javascript
+{
+    "user":{
+        "id":1
+    },
+    "asset":{
+        "id":1
+    }
+}
+```
+
+#### Response User ID
+
+```javascript
+{
+    "id": 1
+}
+```
+- - - -
+### Get An Asset
+
+```http
+GET host_ip:1323/api/assets/:id
+```
+
+#### Response Asset
+
+```javascript
+{
+    "id": 1,
+    "description": "...",
+    "chart": {
+        "title": "...",
+        "axis_titles": [
+            "...",
+            "..."
+        ],
+        "data": [
+            [
+                "...",
+                "...",
+            ]
+        ]
+    }
+}
+```
+- - - -
+### Create An Asset
+
+```http
+POST host_ip:1323/api/assets/
+```
+
+#### Request Asset
+
+```javascript
+{
+    "description": "...",
+    "chart": {
+        "title": "...",
+        "axis_titles": [
+            "...",
+            "..."
+        ],
+        "data": [
+            [
+                "...",
+                "...",
+            ]
+        ]
+    }
+}
+```
+#### Response Asset
+
+```javascript
+{
+    "id": 1,
+    "description": "...",
+    "chart": {
+        "title": "...",
+        "axis_titles": [
+            "...",
+            "..."
+        ],
+        "data": [
+            [
+                "...",
+                "...",
+            ]
+        ]
+    }
+}
+```
+- - - -
+### Update An Asset Description
+
+```http
+POST host_ip:1323/api/assets/
+```
+
+#### Request Asset
+
+```javascript
+{
+    "id": 1,
+    "description": "...",
+}
+```
+#### Response Asset
+
+```javascript
+{
+    "id": 1,
+    "description": "..."
+}
+```
+- - - -
