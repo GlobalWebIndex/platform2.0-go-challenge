@@ -1,31 +1,54 @@
-# GlobalWebIndex Engineering Challenge
+# GlobalWebIndex Engineering Challenge - Elias Krontiris Submission
 
-## Introduction
+## Problem Analysis & Concerns
 
-This challenge is designed to give you the opportunity to demonstrate your abilities as a software engineer and specifically your knowledge of the Go language.
+After reading carefully the challenge goals all assets (charts, insights, audience) could generate data from a single sample data-table. Guessing the Age, Gender, Country are `demographic information` and the only `metric` is the "hours spent on social media", I added the "Participants" schema and seeded mock data into this table.
+Age(10-80), Gender(2) and Country(259) are randomly seeded values and "hours spent on social media" is based on a normal distribution with a spike on 0-2 hours daily, based on a personal estimation.
 
-On the surface the challenge is trivial to solve, however you should choose to add features or capabilities which you feel demonstrate your skills and knowledge the best. For example, you could choose to optimise for performance and concurrency, you could choose to add a robust security layer or ensure your application is highly available. Or all of these.
+I should note that I fully understand that this is out of this challenge's scope and lacks performance, since all *Assets* are calculated based on live data and usually should be exported based on pre-calculated and transformed schemas.
+Also noting that using a ORM deplets the neccesity to use repository pattern for storing data.
 
-Of course, usually we would choose to solve any given requirement with the simplest possible solution, however that is not the spirit of this challenge.
+For convinience and easy testing the endpoint on every spin-up the DB is dropped and recreated with mock data.
+I also include a collection of API calls test all chalenges endpoints [Postman Collection Link](https://www.getpostman.com/collections/dd8e929f0dd1124fbb3a)
 
-## Challenge
+## Docker Guidelines
 
-In GWI we want our users to have a list of assets, things that favourite or “star” so that they have them in their frontpage dashboard.  An asset can be one the following
-* Chart (that has a small title, axes titles and data)
-* Insight (a small piece of text that provides some insight into a topic, e.g. "40% of millenials spend more than 3hours on social media daily")
-* Audience (which is a series of characteristics, for that exercise lets focus on gender (Male, Female), birth country, age groups, hours spent daily on social media, number of purchases last month)
-e.g. Males from 24-35 that spent more than 3 hours on social media daily.
+To run the API use the following:
 
-Build a web server which has some endpoint to receive a user id and return a list of all the user’s assets. Also we want endpoints that would add an asset to favourites, remove it, or edit its description. Assets obviously can share some common attributes (like their description) but they also have completely different structure and data. It’s up to you to decide the structure and we are not looking for something overly complex here (especially for the cases of audiences). There is no need to have/deploy/create an actual database although we would like to discuss about storage options and data representations.
+```bash
+docker-compose -f ./docker-compose.yml
+#In case Postgress delays 
+docker-compose up -d --build
+```
 
-Note that users have no limit on how many assets they want on their favourites so your service will need to provide a reasonable response time.
+## API Routes table
 
-A working server application with functional API is required, along with a clear readme.md. Useful and passing tests would be also be viewed favourably 
+Endpoint                                        | Description
+------------                                    | -------------
+(POST)/auth/signup                              | endpoint to create a user
+(POST)/auth/login                               | authorize and return json web token
+(GET)/assets                                    | based on the token returns all user's assets
+(GET)/assets/{id}                               | get specific asset by id
+(PATCH)/assets/{id}                             | edit asset's description or isFavorite
+(POST)/assets/charts                            | create asset / chart
+(POST)/assets/insigts                           | create asset / insight
+(POST)/assets/audiences                         | create asset / audience
 
-It is appreciated, though not required, if a Dockerfile is included.
+there are more endpoints that were made to make Seeding and Testing easier. All routes are specified on `/app/routes.go`
 
-## Submission
+## Challenge Keypoints
 
-Just a make a PR to the current repo!
+- [x] A working server application with functional API is required
+- [x] It is appreciated, though not required, if a Dockerfile is included.
+- [x] Note that users have no limit on how many assets they want on their favourites so your service will need to provide a reasonable response time
+- [x] Dockerfile included in the project
+- [ ] Useful and passing tests would be also be viewed favourably *(Very Little Tests)
 
-Good luck, potential colleague! 
+## Dependencies
+
+- [x] Gorilla Mux - Router
+- [x] GORM - A Go ORM
+- [x] Dgrijalva JWT - JSON Web Token Library
+- [x] Badoux Checkmail - Validate email on signup
+- [x] Golang Crypto - Hashing passwords before storing  and Validity Comparison
+- [x] Evanphx JSON Patch - Using a single endpoint to update asset title or asset favorite/unfavorite

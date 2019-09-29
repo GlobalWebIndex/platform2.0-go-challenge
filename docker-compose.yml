@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+
+  db:
+    container_name: gwidb
+    image: postgres:latest
+    hostname: gwidb
+    environment:
+      GET_HOST_FROM: dns
+      POSTGRES_DB: gwi
+      POSTGRES_USER: gwiuser
+      POSTGRES_PASWORD: secretpassword
+    ports:
+      - 5432:5432
+    networks:
+      - gwinetwork
+
+  api:
+    container_name: gwiapi  
+    image: gwiapi
+    hostname: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      GET_HOSTS_FROM: dns
+    networks:
+    - gwinetwork
+    ports:
+    - 8080:8080
+    depends_on:
+    - db
+    links:
+    - db
+
+# Networks for communication between containers
+networks:
+  gwinetwork:
+    driver: bridge
