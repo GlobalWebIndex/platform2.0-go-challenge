@@ -5,8 +5,6 @@ import (
 
 	"gwiapi/app/handlers"
 	"gwiapi/app/middlewares"
-
-	"github.com/jinzhu/gorm"
 )
 
 func (a *App) setRouters() {
@@ -40,41 +38,27 @@ func (a *App) setRouters() {
 
 }
 
-// RequestHandlerFunction HandlerRequest extension
-type RequestHandlerFunction func(db *gorm.DB, w http.ResponseWriter, r *http.Request)
-
-func (a *App) handleRequest(handler RequestHandlerFunction) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		handler(a.DB, w, r)
-	}
-}
-func (a *App) handleMiddleware(handler RequestHandlerFunction) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		handler(a.DB, w, r)
-	}
-}
-
-// Get wrap HandleFunc for GET method
+// Get wrap HandleFunc
 func (a *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("GET")
 }
 
-// Get wrap HandleFunc for POST method
+// Post Get wrap HandleFunc
 func (a *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("POST")
 }
 
-// Get wrap HandleFunc for Patch method
+// Patch wrap HandleFunc
 func (a *App) Patch(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("PATCH")
 }
 
-// Get wrap HandleFunc for PUT method
+// Put wrap HandleFunc
 func (a *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("PUT")
 }
 
-// Get wrap HandleFunc for DELETE method
+// Delete wrap HandleFunc
 func (a *App) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
 	a.Router.HandleFunc(path, f).Methods("DELETE")
 }

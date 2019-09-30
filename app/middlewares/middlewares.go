@@ -21,7 +21,7 @@ func JSON(next RequestHandlerFunction, db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// Aut Validates Tokens
+// Auth Validates Tokens
 func Auth(next RequestHandlerFunction, db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := auth.TokenValid(r)

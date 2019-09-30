@@ -39,7 +39,7 @@ func GetAssets(db *gorm.DB, w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	if lmt < 1 && lmt > 100 {
+	if lmt < 1 || lmt > 100 {
 		responses.ERROR(w, http.StatusNotAcceptable, errors.New("Number of limit in records result is not supported"))
 		return
 	}

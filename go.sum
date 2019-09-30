@@ -78,6 +78,8 @@ github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqn
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
+github.com/teliaz/goapi v0.0.0-20190925110340-9ad12a044e48 h1:NMp7rQ/Kka8s3q8Qy/Q20q06HJrlg9D6bOsufKUQJV4=
+github.com/teliaz/goapi v0.0.0-20190925110340-9ad12a044e48/go.mod h1:vJglgxO7SgU54sx8OS/dgdaB+j6UTwLWViloSkdgs0k=
 go.opencensus.io v0.20.1/go.mod h1:6WKK9ahsWS3RSO+PY9ZHZUfv2irvY6gN279GOPZjmmk=
 golang.org/dl v0.0.0-20190916174333-7d514fe8af3a h1:s2tcHwg7PXTOldeJr64ilm9oa7k6UhtHZWlw2DgVzho=
 golang.org/dl v0.0.0-20190916174333-7d514fe8af3a/go.mod h1:IUMfjQLJQd4UTqG1Z90tenwKoCX93Gn3MAQJMOSBsDQ=

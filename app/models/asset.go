@@ -56,13 +56,13 @@ func (a *Asset) GetAssetsWithDetails(db *gorm.DB, assets []Asset, uid uint32) ([
 	assetsResponse := []Asset{}
 	var err error
 
-	// Initial Implementation to check Data returned
+	// Initial Implementation to check Data returned ~200+ms
 	// for i := 0; i < len(ids); i++ {
 	// 	asset, _ := GetAsset(db, ids[i], uid)
 	// 	assetsResponse = append(assetsResponse, asset)
 	// }
 
-	// Initial Implementation 250ms - Bellow Implementation 60ms
+	// Initial Implementation 250ms - Bellow Implementation ~30-60ms
 	channelAsset := make(chan Asset)
 	for _, a := range assets {
 		switch a.AssetType {

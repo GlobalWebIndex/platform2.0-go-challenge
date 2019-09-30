@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"gwiapi/app/auth"
+
 	"github.com/badoux/checkmail"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
@@ -22,6 +24,23 @@ type User struct {
 
 func (user *User) TableName() string {
 	return "users"
+}
+
+// SignIn Helper func to Check Password
+func (user *User) SignIn(db *gorm.DB, email, password string) (string, error) {
+
+	var err error
+	userFound := User{}
+
+	err = db.Debug().Model(User{}).Where("email = ?", email).Take(&userFound).Error
+	if err != nil {
+		return "", err
+	}
+	err = VerifyPassword(userFound.Password, password)
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return "", err
+	}
+	return auth.CreateToken(userFound.ID)
 }
 
 func Hash(password string) ([]byte, error) {
