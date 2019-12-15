@@ -9,9 +9,22 @@
 			"name": "charts",
 			"item": [
 				{
-					"name": "Put Chart",
+					"name": "Get Chart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "PUT",
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -22,7 +35,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"chart\": {\n\t\t\"title\": \"renaimed\",\n\t\t\"x_axes\":\"renaimed\",\n\t\t\"y_axes\":\"renaimed\",\t\n\t\t\"data\": [\n\t\t\t{\n\t\t\t\t\"x\":100.0,\n\t\t\t\t\"y\":200.0\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"x\":200.0,\n\t\t\t\t\"y\":300.0\n\t\t\t}\n\t\t]\n\t}\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -47,22 +60,19 @@
 					"response": []
 				},
 				{
-					"name": "Get Chart",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "Post Chart",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTExNzcsImlkIjoxfQ.WB0KsqSpLcg6cYY5VNlaq45t64Vuyn5AqPUBE781Ks0",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
 									"type": "string"
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -73,7 +83,44 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n\t\"chart\": {\n\t\t\"title\": \"new chart\",\n\t\t\"x_axes\":\"new x\",\n\t\t\"y_axes\":\"new y\",\t\n\t\t\"data\": [\n\t\t\t{\n\t\t\t\t\"x\":100.0,\n\t\t\t\t\"y\":200.0\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"x\":200.0,\n\t\t\t\t\"y\":300.0\n\t\t\t}\n\t\t]\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/chart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"chart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Chart",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"chart\": {\n\t\t\"title\": \"renaimed\",\n\t\t\"x_axes\":\"renaimed\",\n\t\t\"y_axes\":\"renaimed\",\t\n\t\t\"data\": [\n\t\t\t{\n\t\t\t\t\"x\":100.0,\n\t\t\t\t\"y\":200.0\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"x\":200.0,\n\t\t\t\t\"y\":300.0\n\t\t\t}\n\t\t]\n\t}\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -130,6 +177,153 @@
 								"assets",
 								"chart",
 								"A-Chart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Favorite Chart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/chart/A-Chart/favorite",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"chart",
+								"A-Chart",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfavorite Chart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/chart/A-Chart/unfavorite",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"chart",
+								"A-Chart",
+								"unfavorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Describe Chart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"This is my favorite Chart!!!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/chart/A-Chart/describe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"chart",
+								"A-Chart",
+								"describe"
 							]
 						}
 					},
@@ -214,7 +408,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"user\": {\n\t\t\"username\": \"arsotirchellis\",\n\t\t\"password\": \"P@ssword123\"\t\n\t}\n}",
+							"raw": "{\n\t\"user\": {\n\t\t\"username\": \"demouser\",\n\t\t\"password\": \"password123\"\t\n\t}\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -232,6 +426,931 @@
 								"api",
 								"users",
 								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "insights",
+			"item": [
+				{
+					"name": "Delete Insight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/insight/mock title",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"insight",
+								"mock title"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Insight",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU5MjQ3NjQsImlkIjoxfQ.5XuwPxTs8ggAJgYXA0HWraZ-VnhaZTb6HYODR9F5Jow",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/insight/insight_1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"insight",
+								"insight_1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Insight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"insight\": {\n\t\t\"title\": \"updated mock title\",\n\t\t\"text\": \"updated mock insight text\"\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/insight/mock title",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"insight",
+								"mock title"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Insight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"insight\": {\n\t\t\"title\": \"mock title\",\n\t\t\"text\": \"mock insight text\"\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/insight",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"insight"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Favorite Insight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/insight/insight_1/favorite",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"insight",
+								"insight_1",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfavorite Insight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/insight/insight_1/unfavorite",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"insight",
+								"insight_1",
+								"unfavorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Describe Insight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"This is my favorite Insight!!!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/insight/insight_1/describe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"insight",
+								"insight_1",
+								"describe"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "audiences",
+			"item": [
+				{
+					"name": "Post Audience",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"audience\": {\n\t\t\"title\": \"new_audience\",\n\t\t\"birth_country\": \"Cyprus\",\n\t\t\"gender\": 1,\n\t\t\"lower_age_limit\": 12,\n\t\t\"upper_age_limit\": 15,\n\t\t\"social_media_hours\": 6\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/audience",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"audience"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put Audience",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"audience\": {\n\t\t\"title\": \"new_updated_audience\",\n\t\t\"birth_country\": \"Cyprus\",\n\t\t\"gender\": 1,\n\t\t\"lower_age_limit\": 12,\n\t\t\"upper_age_limit\": 15,\n\t\t\"monthly_purchases\": 10\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/audience/new_audience",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"audience",
+								"new_audience"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Audience",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/audience/audience_title_1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"audience",
+								"audience_title_1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Audience",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/audience/new_audience",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"audience",
+								"new_audience"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Describe Audience",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"description\": \"This is my favorite Audience!!!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/audience/audience_title_1/describe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"audience",
+								"audience_title_1",
+								"describe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfavorite Audience",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/audience/audience_title_1/unfavorite",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"audience",
+								"audience_title_1",
+								"unfavorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Favorite Audience",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzYzNDc3OTAsImlkIjoxfQ.dmPrZiQB237bWB9_fx8P9936u1Z01nkmDVmmaR70puU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/audience/audience_title_1/favorite",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"audience",
+								"audience_title_1",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "assets",
+			"item": [
+				{
+					"name": "Get All Favorites",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/favorites/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"favorites",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Favorites Paginated",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/favorites?page_size=2&page_number=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"favorites"
+							],
+							"query": [
+								{
+									"key": "page_size",
+									"value": "2"
+								},
+								{
+									"key": "page_number",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Paginated",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnkiOjE1NzU4MTM4NTYsImlkIjoxfQ.Gvx3PirBAlu4jolaCRrgIRHPviuOnL2dpwb28iT8ats",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assets?page_size=5&page_number=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "page_size",
+									"value": "5"
+								},
+								{
+									"key": "page_number",
+									"value": "1"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
 							]
 						}
 					},
