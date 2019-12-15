@@ -1,0 +1,8 @@
+{
+    "Secret": "jhsbd@%&^G4G$%6y^&*Jdfada3r3f5dfdf##%^",
+    "IsDemo": true,
+    "DbPath": "./gwi_demo.db",
+    "SqlDropPath": "./data/sql/db_drop.sql",
+    "SqlCreatePath": "./data/sql/db_create.sql",
+    "SqlPopulatePath": "./data/sql/db_populate.sql"
+}

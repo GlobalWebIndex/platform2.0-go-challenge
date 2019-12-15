@@ -1,0 +1,87 @@
+INSERT INTO audiences (title, birth_country, gender, age_group_upper_limit, age_group_lower_limit)
+VALUES( 'audience_title_1', 'Greece', 1, 40, 15),
+      ( 'audience_title_2', 'Greece', 1, 40, 20),
+      ( 'audience_title_3', 'Greece', 1, 40, 15),
+      ( 'audience_title_4', 'Greece', 2, 27, 15),
+      ( 'audience_title_5', 'Greece', 1, 40, 20),
+      ( 'audience_title_6', 'Greece', 1, 40, 15),
+      ( 'audience_title_7', 'Greece', 2, 40, 15),
+      ( 'audience_title_8', 'Greece', 2, 27, 20),
+      ( 'audience_title_9', 'Greece', 1, 40, 15),
+      ( 'audience_title_10', 'Greece', 1, 40, 15),
+      ( 'audience_title_11', 'Greece', 2, 27, 20),
+      ( 'audience_title_12', 'Greece', 1, 40, 15),
+      ( 'audience_title_13', 'Greece', 1, 40, 20),
+      ( 'audience_title_14', 'Greece', 1, 40, 15),
+      ( 'audience_title_15', 'Greece', 1, 40, 15),
+      ( 'audience_title_16', 'Greece', 1, 27, 15),
+      ( 'audience_title_17', 'Greece', 2, 40, 20),
+      ( 'audience_title_18', 'Greece', 2, 40, 20),
+      ( 'audience_title_19', 'Greece', 1, 40, 15),
+      ( 'audience_title_20', 'Greece', 2, 27, 15);
+
+INSERT INTO audience_infos (audience_id, audience_info_type, audience_info_stat)
+VALUES(1, 1, 3),
+      (2, 2, 6),
+      (3, 1, 3),
+      (4, 1, 3),
+      (5, 2, 6),
+      (6, 1, 3),
+      (7, 2, 6),
+      (8, 1, 3),
+      (9, 2, 6),
+      (10, 1, 3),
+      (11, 2, 6),
+      (12, 1, 3),
+      (13, 1, 3),
+      (14, 2, 6),
+      (15, 1, 3),
+      (16, 1, 3),
+      (17, 2, 6),
+      (18, 2, 6),
+      (19, 1, 3),
+      (20, 1, 3);
+
+INSERT INTO insights (title, insight_text)
+VALUES( 'insight_1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor'),
+      ( 'insight_2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor'),
+      ( 'insight_3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor'),
+      ( 'insight_4', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor'),
+      ( 'insight_5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor'),
+      ( 'insight_6', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor'),
+      ( 'insight_7', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor'),
+      ( 'insight_8', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor');
+
+
+INSERT INTO charts (title, x_axes, y_axes)
+VALUES( 'A-Chart', 'x_name', 'y_name'),
+      ( 'B-Chart', 'x_name', 'y_name'),
+      ( 'C-Chart', 'x_name', 'y_name'),
+      ( 'D-Chart', 'x_name', 'y_name');
+
+
+INSERT INTO chart_points (chart_id, x, y)
+VALUES( '1', 1.0, 1.0),
+      ( '1', 2.0, 2.0),
+      ( '1', 3.0, 3.0),
+      ( '1', 4.0, 4.0),
+      ( '1', 5.0, 5.0),
+      ( '1', 6.0, 6.0),
+      ( '1', 7.0, 7.0),
+      ( '2', 2.0, 2.0),
+      ( '2', 3.0, 3.0),
+      ( '2', 4.0, 4.0),
+      ( '2', 5.0, 5.0),
+      ( '2', 6.0, 6.0),
+      ( '2', 7.0, 7.0),
+      ( '2', 2.0, 2.0),
+      ( '3', 3.0, 3.0),
+      ( '3', 4.0, 4.0),
+      ( '3', 5.0, 5.0),
+      ( '3', 6.0, 6.0),
+      ( '3', 7.0, 7.0),
+      ( '4', 3.0, 3.0),
+      ( '4', 4.0, 4.0),
+      ( '4', 5.0, 5.0),
+      ( '4', 6.0, 6.0),
+      ( '4', 7.0, 7.0);
