@@ -68,10 +68,3 @@ func setDataForDemoPurposes() {
 
 	fmt.Println("Population of db with demo data completed successfully! :)")
 }
-
-// todos:
-// remove literal db_error, we need something more user friendly
-// logger (with table?, with document?)
-// composition key instead of title on assets
-// mutex to access db ? how gorm works
-// todo check again the pattern for the pointers on assets service, it sucks
