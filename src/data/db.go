@@ -12,7 +12,7 @@ import (
 
 var database *gorm.DB
 
-// InitDB initializes our databse and returns its referance
+// InitDB initializes our databse and returns its reference
 func InitDB() *gorm.DB {
 
 	if common.IsDemo() {
