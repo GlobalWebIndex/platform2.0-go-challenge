@@ -10,13 +10,13 @@ import (
 
 type AudienceValidator struct {
 	AudieceToValidate struct {
-		Title                   string `json:"title" binding:"exists,min=4"`
-		BirthCountry            string `json:"birth_country" binding:"exists,min=4"`
-		Gender                  uint   `json:"gender" binding:"exists"`
-		AgeGroupLowerLimit      uint   `json:"lower_age_limit" binding:"exists"`
-		AgeGroupUpperLimit      uint   `json:"upper_age_limit" binding:"exists"`
-		HoursSpentOnSocialMedia uint   `json:"social_media_hours"`
-		PurchasesPerMonth       uint   `json:"monthly_purchases"`
+		Title                   string        `json:"title" binding:"exists,min=4"`
+		BirthCountry            string        `json:"birth_country" binding:"exists,min=4"`
+		Gender                  models.Gender `json:"gender" binding:"exists"`
+		AgeGroupLowerLimit      uint          `json:"lower_age_limit" binding:"exists"`
+		AgeGroupUpperLimit      uint          `json:"upper_age_limit" binding:"exists"`
+		HoursSpentOnSocialMedia uint          `json:"social_media_hours"`
+		PurchasesPerMonth       uint          `json:"monthly_purchases"`
 	} `json:"audience"`
 	Audience models.Audience
 }
@@ -37,7 +37,7 @@ func (validator *AudienceValidator) Bind(context *gin.Context) error {
 	validator.Audience.AgeGroupLowerLimit = validator.AudieceToValidate.AgeGroupLowerLimit
 	validator.Audience.AgeGroupUpperLimit = validator.AudieceToValidate.AgeGroupUpperLimit
 
-	if models.IsValidGender(validator.AudieceToValidate.Gender) {
+	if validator.AudieceToValidate.Gender.Valid() {
 		validator.Audience.Gender = validator.AudieceToValidate.Gender
 	} else {
 		return errors.New("gender is not valid")
