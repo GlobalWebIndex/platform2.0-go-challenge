@@ -34,7 +34,7 @@ go run main.go
 ### Help
 You will find [here](https://github.com/arsotirchellis/platform2.0-go-challenge/blob/master/GWI-Challenge-Postman-Collection.postman_collection.json) a postman collection JSON file which you can import into a Postman client.
 
->If you have an anauthorized response code, you have to make a login call and copy, paste the JWT access token in the authorization header as BEARER your_token.
+>If you have an unauthorized response code, you have to make a login call and copy, paste the JWT access token in the authorization header as BEARER your_token.
 
 ### Todos
 * Dependency Injection for every service, repository, controller.. [Wire](https://github.com/google/wire) is a good solution. Also check [this article](https://blog.drewolson.org/dependency-injection-in-go).
