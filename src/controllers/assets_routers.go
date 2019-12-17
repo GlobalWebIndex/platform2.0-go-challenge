@@ -48,7 +48,7 @@ func getAllFavorites(context *gin.Context) {
 		context.JSON(http.StatusUnprocessableEntity, common.NewError("db_error", err))
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{"favorited_assets": serializer.Response()})
+	context.JSON(http.StatusOK, gin.H{"favorite_assets": serializer.Response()})
 }
 
 func getAllFavoritesPaginated(context *gin.Context) {
@@ -64,5 +64,5 @@ func getAllFavoritesPaginated(context *gin.Context) {
 		context.JSON(http.StatusUnprocessableEntity, common.NewError("db_error", err))
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{"favorited_assets": serializer.Response()})
+	context.JSON(http.StatusOK, gin.H{"favorite_assets": serializer.Response()})
 }

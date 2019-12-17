@@ -16,7 +16,7 @@ func ChartsRoutesRegister(router *gin.RouterGroup) {
 	router.PUT("/:title", updateChart)
 	router.DELETE("/:title", deleteChart)
 	router.POST("/:title/favorite", favoriteChart)
-	router.DELETE("/:title/unfavorite", unfavoriteChart)
+	router.DELETE("/:title/favorite", unfavoriteChart)
 	router.PATCH("/:title/describe", describeChart)
 }
 

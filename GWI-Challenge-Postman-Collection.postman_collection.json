@@ -263,7 +263,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/assets/chart/A-Chart/unfavorite",
+							"raw": "http://localhost:8080/api/assets/chart/A-Chart/favorite",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -274,7 +274,7 @@
 								"assets",
 								"chart",
 								"A-Chart",
-								"unfavorite"
+								"favorite"
 							]
 						}
 					},
@@ -712,7 +712,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/assets/insight/insight_1/unfavorite",
+							"raw": "http://localhost:8080/api/assets/insight/insight_1/favorite",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -723,7 +723,7 @@
 								"assets",
 								"insight",
 								"insight_1",
-								"unfavorite"
+								"favorite"
 							]
 						}
 					},
@@ -1059,7 +1059,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/assets/audience/audience_title_1/unfavorite",
+							"raw": "http://localhost:8080/api/assets/audience/audience_title_1/favorite",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1070,7 +1070,7 @@
 								"assets",
 								"audience",
 								"audience_title_1",
-								"unfavorite"
+								"favorite"
 							]
 						}
 					},

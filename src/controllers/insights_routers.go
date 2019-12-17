@@ -16,7 +16,7 @@ func InsightsRoutesRegister(router *gin.RouterGroup) {
 	router.PUT("/:title", updateInsight)
 	router.DELETE("/:title", deleteInsight)
 	router.POST("/:title/favorite", favoriteInsight)
-	router.DELETE("/:title/unfavorite", unfavoriteInsight)
+	router.DELETE("/:title/favorite", unfavoriteInsight)
 	router.PATCH("/:title/describe", describeInsight)
 }
 

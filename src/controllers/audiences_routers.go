@@ -16,7 +16,7 @@ func AudiencesRoutesRegister(router *gin.RouterGroup) {
 	router.DELETE("/:title", deleteAudience)
 	router.PUT("/:title", updateAudience)
 	router.POST("/:title/favorite", favoriteAudience)
-	router.DELETE("/:title/unfavorite", unfavoriteAudience)
+	router.DELETE("/:title/favorite", unfavoriteAudience)
 	router.PATCH("/:title/describe", describeAudience)
 }
 
