@@ -29,8 +29,17 @@ cd src
 go build
 go run main.go
 ```
-**go build** will download all the necessary dependencies declared on go module and will create an .exe file (on Windows)
+>**go build** will download all the necessary dependencies declared on go module and will create an .exe file (on Windows)
 
 ### Help
+You will find [here](https://github.com/arsotirchellis/platform2.0-go-challenge/blob/master/GWI-Challenge-Postman-Collection.postman_collection.json) a postman collection JSON file which you can import into a Postman client.
+
+>If you have an anauthorized response code, you have to make a login call and copy, paste the JWT access token in the authorization header as BEARER your_token.
 
 ### Todos
+* Dependency Injection for every service, repository, controller.. [Wire](https://github.com/google/wire) is a good solution. Also check [this article](https://blog.drewolson.org/dependency-injection-in-go).
+* After the pattern above, you have to make 80% unit test coverage at least on service layer.
+* Return asset's user description on asset dtos
+* Encrypt the asset id, and decrypt it on every request. Don't expose database primary key on clients. Title is not reccomended also to be on url as param.
+
+Happy reviewing!
