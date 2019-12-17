@@ -7,7 +7,7 @@ import (
 
 // GetUserByUsername returns user with specified username
 func GetUserByUsername(username string, withFavorites bool) (user *models.User, err error) {
-	user = &models.User{}
+	user = new(models.User)
 	db := data.GetDB()
 	err = db.First(user, &models.User{Username: username}).Error
 	return
@@ -15,7 +15,7 @@ func GetUserByUsername(username string, withFavorites bool) (user *models.User, 
 
 // GetUserByID returns user with specified id
 func GetUserByID(id uint, withFavorites bool) (user *models.User, err error) {
-	user = &models.User{}
+	user = new(models.User)
 	db := data.GetDB()
 	if withFavorites {
 		err = db.Preload("FavoriteCharts").Preload("FavoriteInsights").Preload("FavoriteAudiences").First(user, &models.User{ID: id}).Error

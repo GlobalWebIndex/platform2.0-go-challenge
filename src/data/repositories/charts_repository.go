@@ -7,7 +7,7 @@ import (
 
 // GetChartByTitle returns user with specified title
 func GetChartByTitle(title string) (chart *models.Chart, err error) {
-	chart = &models.Chart{}
+	chart = new(models.Chart)
 	db := data.GetDB()
 	err = db.Preload("Data").First(chart, &models.Chart{Title: title}).Error
 	return

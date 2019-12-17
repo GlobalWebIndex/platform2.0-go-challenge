@@ -6,7 +6,7 @@ import (
 )
 
 func GetAudienceByTitle(title string) (audience *models.Audience, err error) {
-	audience = &models.Audience{}
+	audience = new(models.Audience)
 	db := data.GetDB()
 	err = db.Preload("AudienceInfo").First(audience, &models.Audience{Title: title}).Error
 	return
@@ -19,7 +19,7 @@ func DeleteAudience(audience *models.Audience) error {
 }
 
 func GetFavoritedAudience(userID uint, audienceID uint) (favoritedAudience *models.FavoritedAudience, err error) {
-	favoritedAudience = &models.FavoritedAudience{}
+	favoritedAudience = new(models.FavoritedAudience)
 	db := data.GetDB()
 	err = db.First(favoritedAudience, &models.FavoritedAudience{UserID: userID, AudienceID: audienceID}).Error
 	return

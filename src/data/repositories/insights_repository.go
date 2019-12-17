@@ -6,14 +6,14 @@ import (
 )
 
 func GetInsightByTitle(title string) (insight *models.Insight, err error) {
-	insight = &models.Insight{}
+	insight = new(models.Insight)
 	db := data.GetDB()
 	err = db.First(insight, &models.Insight{Title: title}).Error
 	return
 }
 
 func GetFavoritedInsight(userID uint, isnightID uint) (favoritedInsight *models.FavoritedInsight, err error) {
-	favoritedInsight = &models.FavoritedInsight{}
+	favoritedInsight = new(models.FavoritedInsight)
 	db := data.GetDB()
 	err = db.First(favoritedInsight, &models.FavoritedInsight{UserID: userID, InsightID: isnightID}).Error
 	return

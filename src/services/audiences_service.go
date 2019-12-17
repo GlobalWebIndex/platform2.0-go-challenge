@@ -38,19 +38,22 @@ func UpdateAudienceByTitle(title string, newAudience *models.Audience) (updatedA
 	if err != nil {
 		return nil, err
 	}
-
-	updatedAudience.Title = newAudience.Title
-	updatedAudience.BirthCountry = newAudience.BirthCountry
-	updatedAudience.AgeGroupLowerLimit = newAudience.AgeGroupLowerLimit
-	updatedAudience.AgeGroupUpperLimit = newAudience.AgeGroupUpperLimit
-	updatedAudience.Gender = newAudience.Gender
-	updatedAudience.AudienceInfo.AudienceInfoType = newAudience.AudienceInfo.AudienceInfoType
-	updatedAudience.AudienceInfo.AudienceInfoStat = newAudience.AudienceInfo.AudienceInfoStat
+	updateAudience(updatedAudience, newAudience)
 	err = repositories.Save(&updatedAudience)
 	if err != nil && strings.Contains(err.Error(), "constraint") {
 		err = errors.New("title already exists")
 	}
 	return
+}
+
+func updateAudience(audienceToUpdate *models.Audience, audienceToCopy *models.Audience) {
+	audienceToUpdate.Title = audienceToCopy.Title
+	audienceToUpdate.BirthCountry = audienceToCopy.BirthCountry
+	audienceToUpdate.AgeGroupLowerLimit = audienceToCopy.AgeGroupLowerLimit
+	audienceToUpdate.AgeGroupUpperLimit = audienceToCopy.AgeGroupUpperLimit
+	audienceToUpdate.Gender = audienceToCopy.Gender
+	audienceToUpdate.AudienceInfo.AudienceInfoType = audienceToCopy.AudienceInfo.AudienceInfoType
+	audienceToUpdate.AudienceInfo.AudienceInfoStat = audienceToCopy.AudienceInfo.AudienceInfoStat
 }
 
 func FavoriteAudience(userID uint, title string) (err error) {
