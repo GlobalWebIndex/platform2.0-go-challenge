@@ -13,3 +13,6 @@
 
 # Db files
 *.db
+
+# Editor settings
+/.vscode
