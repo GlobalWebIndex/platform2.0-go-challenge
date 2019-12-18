@@ -16,7 +16,7 @@ Clone the repository:
 git clone https://github.com/arsotirchellis/platform2.0-go-challenge.git
 cd platform2.0-go-challenge
 ```
-If you have Docker just run the commands:
+If you have Docker installed just run the commands:
 
 ```sh
 docker build -t gwi-demo .
@@ -38,8 +38,8 @@ You will find [here](https://github.com/arsotirchellis/platform2.0-go-challenge/
 
 ### Todos
 * Dependency Injection for every service, repository, controller.. [Wire](https://github.com/google/wire) is a good solution. Also check [this article](https://blog.drewolson.org/dependency-injection-in-go).
-* After the pattern above, you have to make 80% unit test coverage at least on service layer.
+* After the implementation of the pattern above, you have to make 80% unit test coverage at least on service layer.
 * Return asset's user description on asset dtos
-* Encrypt the asset id, and decrypt it on every request. Don't expose database primary key on clients. Title is not reccomended also to be on url as param.
+* Encrypt the asset id, and decrypt it on every request. Don't expose database primary key on clients. Title is not recommended also to be on url as param.
 
 Happy reviewing!
